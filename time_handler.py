@@ -1,6 +1,3 @@
-import numpy as np
-
-
 def transform_minutes_to_duration_string(time_minutes):
 
     minutos_totais = abs(time_minutes)
