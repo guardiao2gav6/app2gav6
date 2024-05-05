@@ -52,7 +52,7 @@ base = alt.Chart(pau_de_sebo_df).transform_fold(
 )
 
 graph = base.mark_bar(
-    size=40
+    size=20
 ).encode(
     x=alt.X('tripulante:N',
             sort=alt.EncodingSortField(field='Total_minutos', op='sum', order='descending'),
@@ -87,7 +87,7 @@ texto = base.mark_text(
 
 metas = base.mark_bar(
     opacity=0.08,
-    size=40
+    size=20
 ).encode(
     x=alt.X('tripulante:N',
             sort=alt.EncodingSortField(field='Total_minutos', op='sum', order='descending'),

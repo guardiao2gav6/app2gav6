@@ -33,6 +33,7 @@ if not filtro_grupo:
 if not filtro_esforco_aereo:
     filtro_esforco_aereo = esforco_aereo_df.loc[esforco_aereo_df['grupo'].isin(filtro_grupo), 'esforco'].unique()
 
+st.write(st.report_thread.get_report_ctx().enqueue().width)
 
 # Tabela de Registros de Voos filtrada
 registros_de_voo_df_filtrada = registros_de_voos_df.loc[
