@@ -35,11 +35,12 @@ def gerar_cesta_basica(trimestre,
     detalhes_trip = detalhes_tripulantes_df
     lista_trigramas = dados_pessoais_df.loc[dados_pessoais_df['sigla_funcao'].str.contains('PIL',
                                                                                            case=False), 'trigrama']
-    detalhes_trip_filtrada = detalhes_trip[(detalhes_trip['funcao_a_bordo'] == '1P') |
-                                           (detalhes_trip['funcao_a_bordo'] == 'IN') |
-                                           ((detalhes_trip['funcao_a_bordo'] == 'AL') &
-                                           (detalhes_trip['posicao_a_bordo'] is False))]
-    detalhes_trip_filtrada['mes_voo'] = pd.to_datetime(detalhes_trip_filtrada['data_voo'], format="%d/%m/%Y").dt.month
+    detalhes_trip_filtrada = detalhes_trip.loc[(detalhes_trip['funcao_a_bordo'] == '1P') |
+                                               (detalhes_trip['funcao_a_bordo'] == 'IN') |
+                                               ((detalhes_trip['funcao_a_bordo'] == 'AL') &
+                                               (detalhes_trip['posicao_a_bordo'] is False))]
+
+    detalhes_trip_filtrada.loc[:, 'mes_voo'] = pd.to_datetime(detalhes_trip_filtrada['data_voo'], format="%d/%m/%Y").dt.month
     detalhes_trip_filtrada = detalhes_trip_filtrada.loc[detalhes_trip_filtrada['mes_voo'].isin(
         lista_meses_do_trimestre)]
     detalhes_trip_filtrada = detalhes_trip_filtrada.rename(columns={'tempo_noturno': 'Noturno',

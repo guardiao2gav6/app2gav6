@@ -28,15 +28,18 @@ def tratando_dados_esforco(esforco_aereo_data):
     esforco_aereo_data.loc[(esforco_aereo_data['aeronave'] == 'E-99') & (esforco_aereo_data['esforco'] == 'SESQAE'),
                            'saldo_horas_minutos'] -= horas_gastas_sesqae_sop_e99
 
-    esforco_aereo_data['horas_gastas'] = esforco_aereo_data['horas_gastas_minutos'].map(
+    esforco_aereo_data.loc[:, 'horas_gastas'] = esforco_aereo_data['horas_gastas_minutos'].map(
         time_handler.transform_minutes_to_duration_string)
-    esforco_aereo_data['saldo_horas'] = esforco_aereo_data['saldo_horas_minutos'].map(
+    esforco_aereo_data.loc[:, 'saldo_horas'] = esforco_aereo_data['saldo_horas_minutos'].map(
         time_handler.transform_minutes_to_duration_string)
-    esforco_aereo_data['posicao_horas_voadas'] = 0
+    esforco_aereo_data.loc[:, 'posicao_horas_voadas'] = 0
     esforco_aereo_data.loc[esforco_aereo_data['horas_gastas'] == '00:00', 'horas_gastas'] = ''
 
-    esforco_aereo_data = esforco_aereo_data[esforco_aereo_data['esforco'] != "SESQAE (*)"]
-    esforco_aereo_data['posicao_texto'] = esforco_aereo_data.apply(gerar_posicao_texto, axis=1)
+    mascara = esforco_aereo_data['esforco'] == 'SESQAE (*)'
+    esforco_aereo_data = esforco_aereo_data.drop(esforco_aereo_data[mascara].index)
+
+    esforco_aereo_data.loc[:, 'posicao_texto'] = esforco_aereo_data.apply(gerar_posicao_texto, axis=1)
+
     return esforco_aereo_data
 
 
