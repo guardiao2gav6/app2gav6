@@ -113,96 +113,93 @@ grafico_pau_de_sebo = (metas + graph + texto)
 
 st.altair_chart((metas + graph + texto), use_container_width=True)
 
-cols = st.columns([0.4, 0.6])
-with cols[0]:
-    # CESTA BÁSICA
-    st.markdown("#### Cesta Básica")
-    trimestre_atual = (int(datetime.datetime.today().month) + 2) // 3
-    filtro_cesta_basica_trimestre = st.selectbox(label='Trimestre',
-                                                 options=[f"{trimestre_numero}º Trimestre" for trimestre_numero in [1,
-                                                                                                                    2,
-                                                                                                                    3,
-                                                                                                                    4]],
-                                                 index=trimestre_atual - 1)
-    numero_trimestre_selecionado = int(filtro_cesta_basica_trimestre.split(' ')[0][0])
-    cesta_basica_trimestre = cesta_basica.gerar_cesta_basica(trimestre=numero_trimestre_selecionado,
-                                                             detalhes_tripulantes_df=detalhes_tripulantes_df,
-                                                             descidas_df=descidas_df,
-                                                             dados_pessoais_df=dados_pessoais_df)
-    st.dataframe(cesta_basica_trimestre)
-with cols[1]:
+# ADAPTAÇÃO
+st.markdown('#### Adaptação Pilotos')
+adaptacao_pilotos = adaptacao.gerar_adaptacao(detalhes_tripulantes_df=detalhes_tripulantes_df,
+                                              dados_pessoais_df=dados_pessoais_df)[0]
 
-    # ADAPTAÇÃO
-    st.markdown('#### Adaptação Pilotos')
-    adaptacao_pilotos = adaptacao.gerar_adaptacao(detalhes_tripulantes_df=detalhes_tripulantes_df,
-                                                  dados_pessoais_df=dados_pessoais_df)[0]
+adaptacao_pilotos['data_voo'] = adaptacao_pilotos['data_voo'].map(lambda x: x.strftime("%d/%m/%Y"))
+adaptacao_pilotos['voar_ate'] = adaptacao_pilotos['voar_ate'].map(lambda x: x.strftime("%d/%m/%Y"))
 
-    adaptacao_pilotos['data_voo'] = adaptacao_pilotos['data_voo'].map(lambda x: x.strftime("%d/%m/%Y"))
-    adaptacao_pilotos['voar_ate'] = adaptacao_pilotos['voar_ate'].map(lambda x: x.strftime("%d/%m/%Y"))
+adaptacao_pilotos['Status'] = adaptacao_pilotos['dias_restantes'].map(analisar_status_adaptacao)
+adaptacao_pilotos['Obs.'] = ''
+adaptacao_pilotos.loc[adaptacao_pilotos['tripulante'].isin(['FUC',
+                                                            'SBR',
+                                                            'TAI',
+                                                            'RPH']), 'Obs.'] = 'Curso fora de sede'
+adaptacao_pilotos = adaptacao_pilotos.sort_values(by=['funcao_a_bordo', 'dias_sem_voar_grafico'], ascending=False)
 
-    adaptacao_pilotos['Status'] = adaptacao_pilotos['dias_restantes'].map(analisar_status_adaptacao)
-    adaptacao_pilotos['Obs.'] = ''
-    adaptacao_pilotos.loc[adaptacao_pilotos['tripulante'].isin(['FUC',
-                                                                'SBR',
-                                                                'TAI',
-                                                                'RPH']), 'Obs.'] = 'Curso fora de sede'
-    adaptacao_pilotos = adaptacao_pilotos.sort_values(by=['funcao_a_bordo', 'dias_sem_voar_grafico'], ascending=False)
+adaptacao_df_tabela = adaptacao_pilotos.drop(columns=['dias_para_desadaptar',
+                                                      'label_dias_restantes',
+                                                      'dias_restantes',
+                                                      'funcao_a_bordo',
+                                                      'dias_sem_voar_grafico'])
+adaptacao_df_tabela = adaptacao_df_tabela.rename(columns={'tripulante': 'Trig.',
+                                                          'data_voo': 'Último Voo',
+                                                          'voar_ate': 'Voar até',
+                                                          'dias_sem_voar': 'Dias sem voar'})
+adaptacao_df_tabela = adaptacao_df_tabela.sort_values(by=['Dias sem voar'], ascending=False)
+adaptacao_df_tabela = adaptacao_df_tabela.set_index('Trig.')
+adaptacao_df_tabela_pintada = adaptacao_df_tabela.style.apply(pintar_adaptacao, axis=1)
 
-    adaptacao_df_tabela = adaptacao_pilotos.drop(columns=['dias_para_desadaptar',
-                                                          'label_dias_restantes',
-                                                          'dias_restantes',
-                                                          'funcao_a_bordo',
-                                                          'dias_sem_voar_grafico'])
-    adaptacao_df_tabela = adaptacao_df_tabela.rename(columns={'tripulante': 'Trig.',
-                                                              'data_voo': 'Último Voo',
-                                                              'voar_ate': 'Voar até',
-                                                              'dias_sem_voar': 'Dias sem voar'})
-    adaptacao_df_tabela = adaptacao_df_tabela.sort_values(by=['Dias sem voar'], ascending=False)
-    adaptacao_df_tabela = adaptacao_df_tabela.set_index('Trig.')
-    adaptacao_df_tabela_pintada = adaptacao_df_tabela.style.apply(pintar_adaptacao, axis=1)
+if st.checkbox(label='Mostrar Dados - Adaptação Pilotos'):
+    st.dataframe(adaptacao_df_tabela_pintada, use_container_width=True)
 
-    if st.checkbox(label='Mostrar Dados - Adaptação Pilotos'):
-        st.dataframe(adaptacao_df_tabela_pintada, use_container_width=True)
+adaptacao_base = alt.Chart(adaptacao_pilotos)
+adaptacao_chart = adaptacao_base.mark_bar(
+    size=25
+).encode(
+    x=alt.X('tripulante:N', sort=alt.EncodingSortField(field='dias_para_desadaptar', op='sum', order='descending'),
+            axis=alt.Axis(title='', labelAngle=0, labelFontSize=16, labelPadding=20, ticks=False)),
+    y=alt.Y('dias_sem_voar_grafico:Q', axis=alt.Axis(labels=False, title='')),
+    color=alt.Color('funcao_a_bordo:N',
+                    legend=alt.Legend(orient='top',
+                                      title='',
+                                      padding=20),
+                    scale=alt.Scale(domain=['IN', '1P', 'AL'],
+                                    range=['#194d82', '#148212', '#b56d00'])),
+    tooltip=[alt.Tooltip('tripulante:N', title='Trig: '),
+             alt.Tooltip('data_voo:N', title='Último voo: '),
+             alt.Tooltip('voar_ate:N', title='Voar até: ')]
+)
 
-    adaptacao_base = alt.Chart(adaptacao_pilotos)
-    adaptacao_chart = adaptacao_base.mark_bar(
-        size=25
-    ).encode(
-        x=alt.X('tripulante:N', sort=alt.EncodingSortField(field='dias_para_desadaptar', op='sum', order='descending'),
-                axis=alt.Axis(title='', labelAngle=0, labelFontSize=16, labelPadding=20, ticks=False)),
-        y=alt.Y('dias_sem_voar_grafico:Q', axis=alt.Axis(labels=False, title='')),
-        color=alt.Color('funcao_a_bordo:N',
-                        legend=alt.Legend(orient='top',
-                                          title='',
-                                          padding=20),
-                        scale=alt.Scale(domain=['IN', '1P', 'AL'],
-                                        range=['#194d82', '#148212', '#b56d00'])),
-        tooltip=[alt.Tooltip('tripulante:N', title='Trig: '),
-                 alt.Tooltip('data_voo:N', title='Último voo: '),
-                 alt.Tooltip('voar_ate:N', title='Voar até: ')]
-    )
+adaptacao_chart_max_sem_voar = adaptacao_base.mark_bar(
+    opacity=0.2,
+    color='grey',
+    size=25
+).encode(
+    x=alt.X('tripulante:N',
+            sort=alt.EncodingSortField(field='dias_para_desadaptar', op='sum', order='descending'),
+            axis=alt.Axis(labelFontSize=16, labelAlign='center')),
+    y=alt.Y('dias_para_desadaptar:Q')
+)
 
-    adaptacao_chart_max_sem_voar = adaptacao_base.mark_bar(
-        opacity=0.2,
-        color='grey',
-        size=25
-    ).encode(
-        x=alt.X('tripulante:N',
-                sort=alt.EncodingSortField(field='dias_para_desadaptar', op='sum', order='descending'),
-                axis=alt.Axis(labelFontSize=16, labelAlign='center')),
-        y=alt.Y('dias_para_desadaptar:Q')
-    )
+rotulo_dias_restantes = adaptacao_base.mark_text(
+    color='#747575',
+    baseline='top',
+    fontSize=16,
+    dy=-25
+).encode(
+    x=alt.X('tripulante:N', sort=alt.EncodingSortField(field='dias_para_desadaptar', op='sum', order='descending')),
+    y=alt.Y('dias_sem_voar_grafico:Q'),
+    text='label_dias_restantes:N',
+)
 
-    rotulo_dias_restantes = adaptacao_base.mark_text(
-        color='#747575',
-        baseline='top',
-        fontSize=16,
-        dy=-25
-    ).encode(
-        x=alt.X('tripulante:N', sort=alt.EncodingSortField(field='dias_para_desadaptar', op='sum', order='descending')),
-        y=alt.Y('dias_sem_voar_grafico:Q'),
-        text='label_dias_restantes:N',
-    )
+grafico_adaptacao = (adaptacao_chart_max_sem_voar + adaptacao_chart + rotulo_dias_restantes)
+st.altair_chart((adaptacao_chart_max_sem_voar + adaptacao_chart + rotulo_dias_restantes), use_container_width=True)
 
-    grafico_adaptacao = (adaptacao_chart_max_sem_voar + adaptacao_chart + rotulo_dias_restantes)
-    st.altair_chart((adaptacao_chart_max_sem_voar + adaptacao_chart + rotulo_dias_restantes), use_container_width=True)
+# CESTA BÁSICA
+st.markdown("#### Cesta Básica")
+trimestre_atual = (int(datetime.datetime.today().month) + 2) // 3
+filtro_cesta_basica_trimestre = st.selectbox(label='Trimestre',
+                                             options=[f"{trimestre_numero}º Trimestre" for trimestre_numero in [1,
+                                                                                                                2,
+                                                                                                                3,
+                                                                                                                4]],
+                                             index=trimestre_atual - 1)
+numero_trimestre_selecionado = int(filtro_cesta_basica_trimestre.split(' ')[0][0])
+cesta_basica_trimestre = cesta_basica.gerar_cesta_basica(trimestre=numero_trimestre_selecionado,
+                                                         detalhes_tripulantes_df=detalhes_tripulantes_df,
+                                                         descidas_df=descidas_df,
+                                                         dados_pessoais_df=dados_pessoais_df)
+st.dataframe(cesta_basica_trimestre, use_container_width=True)
