@@ -209,19 +209,17 @@ rotulo_dias_restantes = adaptacao_tripulantes_base.mark_text(
     text='label_dias_restantes:N',
     tooltip=alt.value(None)
 )
-# if st.checkbox(label=f'Mostrar Dados - Adaptação {filtro_funcoes}'):
-col1, col_vazia, col2 = st.columns([0.45, 0.02, 0.53])
-with col1:
+if st.checkbox(label=f'Mostrar Dados - Adaptação {filtro_funcoes}'):
     st.dataframe(adaptacao_df_tabela_tripulantes_pintada, use_container_width=True)
-with col2:
-    st.altair_chart((adaptacao_chart_max_sem_voar + adaptacao_tripulantes_chart + rotulo_dias_restantes),
-                    use_container_width=True)
+
+
+st.altair_chart((adaptacao_chart_max_sem_voar + adaptacao_tripulantes_chart + rotulo_dias_restantes), use_container_width=True)
 
 percentual_adaptado = adaptacao_df_tabela_tripulantes['Status'].value_counts().loc['ADAPTADO'] / adaptacao_tripulantes_df.shape[0]
 if percentual_adaptado < 0.7:
     st.markdown(f'###### ATENÇÃO: {round((1 - percentual_adaptado) * 100, 2)}% do QT selecionado está DESADAPTADO')
-
-st.markdown('- Os números escritos acima das barras representam a quantidade de dias restantes que o militar ainda pode'
-            'ficar sem voar.')
-st.markdown('- Por enquanto, esses dados levam em consideração apenas os voos realizados, sendo assim, o escalante de '
-            'COAM deve ficar atento para possíveis readaptações em MPTS que não serão contabilizadas aqui.')
+#
+# st.markdown('- Os números escritos acima das barras representam a quantidade de dias restantes que o militar ainda pode'
+#             'ficar sem voar.')
+# st.markdown('- Por enquanto, esses dados levam em consideração apenas os voos realizados, sendo assim, o escalante de '
+#             'COAM deve ficar atento para possíveis readaptações em MPTS que não serão contabilizadas aqui.')

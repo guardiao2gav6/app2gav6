@@ -7,9 +7,6 @@ import adaptacao
 from dados_gsheets import Dados
 
 
-
-
-
 def analisar_status_adaptacao(dias_restantes):
     if dias_restantes > 10:
         return 'ADAPTADO'
