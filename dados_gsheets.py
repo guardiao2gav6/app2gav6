@@ -17,8 +17,12 @@ class Dados:
         ID_registros_de_voos = "0"
         registros_de_voos_df = self.conn.read(spreadsheet=self.url, ttl=self.ttl, worksheet=ID_registros_de_voos)
         registros_de_voos_df['tempo_de_voo'] = registros_de_voos_df['tempo_de_voo'].astype(str)
-        registros_de_voos_df['data_hora_dep'] = pd.to_datetime(registros_de_voos_df['data_hora_dep'])
-        registros_de_voos_df['data_hora_pouso'] = pd.to_datetime(registros_de_voos_df['data_hora_pouso'])
+        registros_de_voos_df['tempo_de_voo_minutos'] = registros_de_voos_df['tempo_de_voo'].map(
+            time_handler.transform_duration_string_to_minutes)
+        registros_de_voos_df['data_hora_dep'] = pd.to_datetime(registros_de_voos_df['data_hora_dep'],
+                                                               format='%d/%m/%Y %H:%M:%S')
+        registros_de_voos_df['data_hora_pouso'] = pd.to_datetime(registros_de_voos_df['data_hora_pouso'],
+                                                                 format='%d/%m/%Y %H:%M:%S')
 
         return registros_de_voos_df
 
@@ -39,7 +43,7 @@ class Dados:
                                     'tempo_ifr',
                                     'ifr_sem_pa',
                                     'arremetidas',
-                                    'trafego_visual']] # adicionar aeronave, esforço aéreo, matrícula
+                                    'trafego_visual']]
 
         detalhes_tripulantes_df = detalhes_tripulantes_df.merge(df1, how='left')
         detalhes_tripulantes_df['data_voo'] = pd.to_datetime(detalhes_tripulantes_df['data_voo'])
@@ -67,7 +71,6 @@ class Dados:
             time_handler.transform_minutes_to_duration_string)
         meta_pilotos_df['meta_esquadrao'] = meta_pilotos_df['meta_esquadrao_minutos'].map(
             time_handler.transform_minutes_to_duration_string)
-
 
         return meta_pilotos_df
 
@@ -108,7 +111,6 @@ class Dados:
 
         return sobreaviso_df
 
-
     def get_detalhes_tripulantes_sobreaviso(self):
         ID_detalhes_tripulantes_sobreaviso = "950795421"
         detalhes_tripulantes_sobreaviso_df = self.conn.read(spreadsheet=self.url,
@@ -144,9 +146,10 @@ class Dados:
                                                                 ttl=self.ttl,
                                                                 worksheet=ID_detalhes_sobreaviso_R99)
         sobreaviso_r99_df = self.get_sobreaviso_R99()
-        detalhes_tripulantes_sobreaviso_r99_df = detalhes_tripulantes_sobreaviso_r99_df.merge(sobreaviso_r99_df,
-                                                                                              how='left',
-                                                                                              on='IdSobreavisoR99').drop(
+        detalhes_tripulantes_sobreaviso_r99_df = detalhes_tripulantes_sobreaviso_r99_df.merge(
+            sobreaviso_r99_df,
+            how='left',
+            on='IdSobreavisoR99').drop(
             columns='IdTripulante')
         detalhes_tripulantes_sobreaviso_r99_df = detalhes_tripulantes_sobreaviso_r99_df.rename(
             columns={'tripulante': 'militar'}
@@ -201,12 +204,13 @@ class Dados:
         esforco_aereo_df = self.conn.read(spreadsheet=self.url,
                                           ttl=self.ttl,
                                           worksheet=ID_esforco_aereo)
-        esforco_aereo_df['horas_alocadas'] = esforco_aereo_df['horas_alocadas_minutos'].map(
-            time_handler.transform_minutes_to_duration_string)
-        esforco_aereo_df['horas_gastas'] = esforco_aereo_df['horas_gastas_minutos'].map(
-            time_handler.transform_minutes_to_duration_string)
-        esforco_aereo_df['saldo_horas'] = esforco_aereo_df['saldo_horas_minutos'].map(
-            time_handler.transform_minutes_to_duration_string)
+
+        esforco_aereo_df['horas_alocadas_minutos'] = esforco_aereo_df['horas_alocadas'].map(
+            time_handler.transform_duration_string_to_minutes)
+        esforco_aereo_df['horas_gastas_minutos'] = esforco_aereo_df['horas_gastas'].map(
+            time_handler.transform_duration_string_to_minutes)
+        esforco_aereo_df['saldo_horas_minutos'] = esforco_aereo_df['saldo_horas'].map(
+            time_handler.transform_duration_string_to_minutes)
         esforco_aereo_df = esforco_aereo_df.drop(columns=['IdEsfAer'])
         return esforco_aereo_df
 
@@ -215,6 +219,10 @@ class Dados:
         planejamento_horas_df = self.conn.read(spreadsheet=self.url,
                                                ttl=self.ttl,
                                                worksheet=ID_planejamento_horas)
+        planejamento_horas_df['horas_planejadas_minutos'] = planejamento_horas_df['horas_planejadas'].map(
+            time_handler.transform_duration_string_to_minutes)
+        planejamento_horas_df['horas_voadas_minutos'] = planejamento_horas_df['horas_voadas'].map(
+            time_handler.transform_duration_string_to_minutes)
         return planejamento_horas_df
 
     def get_aerodromos(self):

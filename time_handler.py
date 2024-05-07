@@ -10,6 +10,9 @@ def transform_minutes_to_duration_string(time_minutes):
 
 
 def transform_duration_string_to_minutes(duration_string):
-    horas, minutos, segundos = duration_string.split(':')
+    try:
+        horas, minutos, segundos = duration_string.split(':')
+    except ValueError:
+        horas, minutos = duration_string.split(':')
     total_minutos = (int(horas) * 60) + int(minutos)
     return total_minutos

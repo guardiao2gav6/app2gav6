@@ -1,7 +1,6 @@
 import altair as alt
-from databases import esforco_aereo_df
 import time_handler
-
+import streamlit as st
 
 def gerar_posicao_texto(row):
     if row['horas_alocadas_minutos'] > 0 and row['horas_gastas_minutos'] <= row['horas_alocadas_minutos']:
@@ -12,8 +11,10 @@ def gerar_posicao_texto(row):
 
 
 def tratando_dados_esforco(esforco_aereo_data):
+
     horas_gastas_sesqae_sop = esforco_aereo_data.loc[(esforco_aereo_data['esforco'] == 'SESQAE (*)'),
                                                      ['aeronave', 'horas_gastas_minutos']]
+
     horas_gastas_sesqae_sop_r99 = horas_gastas_sesqae_sop.loc[horas_gastas_sesqae_sop['aeronave'] == 'R-99',
                                                               'horas_gastas_minutos'].iloc[0]
     horas_gastas_sesqae_sop_e99 = horas_gastas_sesqae_sop.loc[horas_gastas_sesqae_sop['aeronave'] == 'E-99',
@@ -43,7 +44,7 @@ def tratando_dados_esforco(esforco_aereo_data):
     return esforco_aereo_data
 
 
-def gerar_grafico_esforco(aeronave, grupo):
+def gerar_grafico_esforco(aeronave, grupo, esforco_aereo_df):
     esforco_aereo_data = tratando_dados_esforco(esforco_aereo_df)
     esforco_aereo_data = esforco_aereo_data.rename(columns={'saldo_horas_minutos': 'Saldo de Horas',
                                                             'horas_gastas_minutos': 'Horas voadas'})

@@ -2,13 +2,16 @@ import streamlit as st
 import datetime
 import time_handler
 import altair as alt
-from databases import registros_de_voos_df, aeronaves_df, esforco_aereo_df, planejamento_horas_df
 import esforco_aereo
+from dados_gsheets import Dados
 
 
-st.set_page_config(layout='wide',
-                   page_title='2º/6º GAV - CCIAO',
-                   page_icon=':airplane')
+# Carregando dados
+dados = Dados()
+esforco_aereo_df = dados.get_esforco_aereo()
+registros_de_voos_df = dados.generate_registros_voos_df()
+aeronaves_df = dados.get_aeronaves()
+planejamento_horas_df = dados.get_planejamento_horas()
 
 filtros_cols = st.columns([1, 1, 1, 1, 1])
 with filtros_cols[0]:
@@ -88,8 +91,8 @@ st.markdown("## ")
 
 # # Planejamento Mensal
 
-table2 = planejamento_horas_df.groupby(by='mes')[['horas_planejadas_minutos',
-                                                  'horas_voadas_minutos']].sum().reset_index()
+table2 = planejamento_horas_df.groupby(by='mes_numero')[['horas_planejadas_minutos',
+                                                         'horas_voadas_minutos']].sum().reset_index()
 table2['Planejado'] = table2['horas_planejadas_minutos'].map(time_handler.transform_minutes_to_duration_string)
 table2['Voado'] = table2['horas_voadas_minutos'].map(time_handler.transform_minutes_to_duration_string)
 
@@ -97,7 +100,7 @@ table2['Voado'] = table2['horas_voadas_minutos'].map(time_handler.transform_minu
 planejamento_mensal_base = alt.Chart(table2)
 voado = planejamento_mensal_base.mark_bar(color="#00e842",
                                           width=60).encode(
-    x=alt.X('month(mes):O', axis=alt.Axis(labelFontSize=16)),
+    x=alt.X('month(mes_numero):O', axis=alt.Axis(labelFontSize=16)),
     y=alt.Y('sum(horas_voadas_minutos):Q', axis=alt.Axis(title='', labels=False)),
     tooltip=['Planejado:N', 'Voado:N'])
 
@@ -117,7 +120,7 @@ rotulos_planejado = alt.Chart(table2).mark_text(
     dy=-20,
     fontSize=16
 ).encode(
-    x=alt.X('month(mes):O', axis=alt.Axis(title='')),
+    x=alt.X('month(mes_numero):O', axis=alt.Axis(title='')),
     y=alt.Y('sum(horas_planejadas_minutos):Q', axis=alt.Axis(title='', labels=True)),
     text='Planejado',
 
@@ -128,7 +131,7 @@ rotulo_voado = alt.Chart(table2).mark_text(
     align='center',
     fontSize=16,
 ).encode(
-    x=alt.X('month(mes):O', axis=alt.Axis(title='')),
+    x=alt.X('month(mes_numero):O', axis=alt.Axis(title='')),
     y=alt.Y('sum(horas_voadas_minutos):Q', axis=alt.Axis(title='', labels=False)),
     text='Voado',
 
@@ -191,27 +194,27 @@ cols = st.columns([1, 0.2, 1])
 with cols[0]:
     st.markdown('### E-99')
     st.markdown('##### COMPREP')
-    E99_comprep_chart = esforco_aereo.gerar_grafico_esforco('E-99', 'COMPREP')
+    E99_comprep_chart = esforco_aereo.gerar_grafico_esforco('E-99', 'COMPREP', esforco_aereo_df)
     st.altair_chart(E99_comprep_chart, use_container_width=True)
 
     st.markdown('#### COMAE')
-    E99_comae_chart = esforco_aereo.gerar_grafico_esforco('E-99', 'COMAE')
+    E99_comae_chart = esforco_aereo.gerar_grafico_esforco('E-99', 'COMAE', esforco_aereo_df)
     st.altair_chart(E99_comae_chart, use_container_width=True)
 
     st.markdown('#### DCTA')
-    E99_dcta_chart = esforco_aereo.gerar_grafico_esforco('E-99', 'DCTA')
+    E99_dcta_chart = esforco_aereo.gerar_grafico_esforco('E-99', 'DCTA', esforco_aereo_df)
     st.altair_chart(E99_dcta_chart, use_container_width=True)
 
 with cols[2]:
     st.markdown('### R-99')
     st.markdown('##### COMPREP')
-    R99_comprep_chart = esforco_aereo.gerar_grafico_esforco('R-99', 'COMPREP')
+    R99_comprep_chart = esforco_aereo.gerar_grafico_esforco('R-99', 'COMPREP', esforco_aereo_df)
     st.altair_chart(R99_comprep_chart, use_container_width=True)
 
     st.markdown('#### COMAE')
-    R99_comae_chart = esforco_aereo.gerar_grafico_esforco('R-99', 'COMAE')
+    R99_comae_chart = esforco_aereo.gerar_grafico_esforco('R-99', 'COMAE', esforco_aereo_df)
     st.altair_chart(R99_comae_chart, use_container_width=True)
 
     st.markdown('#### DCTA')
-    R99_dcta_chart = esforco_aereo.gerar_grafico_esforco('R-99', 'DCTA')
+    R99_dcta_chart = esforco_aereo.gerar_grafico_esforco('R-99', 'DCTA', esforco_aereo_df)
     st.altair_chart(R99_dcta_chart, use_container_width=True)
