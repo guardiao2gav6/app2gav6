@@ -3,15 +3,20 @@ import datetime
 import time_handler
 import altair as alt
 import esforco_aereo
-from dados_gsheets import Dados
+import dados_gsheets
 
 
-# Carregando dados
-dados = Dados()
-esforco_aereo_df = dados.get_esforco_aereo()
-registros_de_voos_df = dados.generate_registros_voos_df()
-aeronaves_df = dados.get_aeronaves()
-planejamento_horas_df = dados.get_planejamento_horas()
+def load_data():
+    dados = dados_gsheets.Dados()
+    esforco_aereo_data = dados.get_esforco_aereo()
+    registros_de_voos = dados.generate_registros_voos_df()
+    aeronaves = dados.get_aeronaves()
+    planejamento_horas = dados.get_planejamento_horas()
+    return esforco_aereo_data, registros_de_voos, aeronaves, planejamento_horas
+
+
+esforco_aereo_df, registros_de_voos_df, aeronaves_df, planejamento_horas_df = load_data()
+
 
 filtros_cols = st.columns([1, 1, 1, 1, 1])
 with filtros_cols[0]:
@@ -25,7 +30,6 @@ with filtros_cols[3]:
     lista_esforco_grupo = esforco_aereo_df.loc[esforco_aereo_df['grupo'].isin(filtro_grupo), 'esforco'].unique()
 with filtros_cols[4]:
     filtro_esforco_aereo = st.multiselect(label='Esforço Aéreo', options=lista_esforco_grupo)
-
 
 if not filtro_aeronave:
     filtro_aeronave = aeronaves_df['modelo'].unique()
@@ -190,7 +194,7 @@ st.markdown("#")
 st.markdown('---')
 st.markdown("### Esforço Aéreo")
 
-cols = st.columns([1, 0.2, 1])
+cols = st.columns([1, 0.05, 1])
 with cols[0]:
     st.markdown('### E-99')
     st.markdown('##### COMPREP')

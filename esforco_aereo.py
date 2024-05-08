@@ -1,6 +1,6 @@
 import altair as alt
 import time_handler
-import streamlit as st
+
 
 def gerar_posicao_texto(row):
     if row['horas_alocadas_minutos'] > 0 and row['horas_gastas_minutos'] <= row['horas_alocadas_minutos']:
@@ -62,7 +62,7 @@ def gerar_grafico_esforco(aeronave, grupo, esforco_aereo_df):
     )
 
     esforco_chart = base_esforco_filtrado.mark_bar(
-        width=40
+        width=30
     ).encode(
         x=alt.X('esforco:N', axis=alt.Axis(labelFontSize=14,
                                            title="",

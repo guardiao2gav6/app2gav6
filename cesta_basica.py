@@ -38,16 +38,16 @@ def gerar_cesta_basica(trimestre,
     detalhes_trip_filtrada = detalhes_trip.loc[(detalhes_trip['funcao_a_bordo'] == '1P') |
                                                (detalhes_trip['funcao_a_bordo'] == 'IN') |
                                                ((detalhes_trip['funcao_a_bordo'] == 'AL') &
-                                               (detalhes_trip['posicao_a_bordo'] is False))]
+                                               (detalhes_trip['posicao_a_bordo'] == 'LSP'))]
 
-    detalhes_trip_filtrada.loc[:, 'mes_voo'] = pd.to_datetime(detalhes_trip_filtrada['data_voo'], format="%d/%m/%Y").dt.month
+    detalhes_trip_filtrada.loc[:, 'mes_voo'] = pd.to_datetime(detalhes_trip_filtrada['data_voo'],
+                                                              format="%d/%m/%Y").dt.month
     detalhes_trip_filtrada = detalhes_trip_filtrada.loc[detalhes_trip_filtrada['mes_voo'].isin(
         lista_meses_do_trimestre)]
     detalhes_trip_filtrada = detalhes_trip_filtrada.rename(columns={'tempo_noturno': 'Noturno',
                                                                     'ifr_sem_pa': 'IFR sem PA',
                                                                     'arremetidas': 'Arremetidas',
                                                                     'tripulante': 'Tripulante'})
-
 
     if detalhes_trip_filtrada.empty:
         cesta_basica_zerados = pd.DataFrame({
@@ -59,8 +59,8 @@ def gerar_cesta_basica(trimestre,
             'Não Precisão': 0
         }).set_index('Tripulante')
         cesta_basica_pintada = cesta_basica_zerados.style.applymap(pintar_celulas_pr_np,
-                                                              subset=['Precisão',
-                                                                      'Não Precisão']).applymap(
+                                                                   subset=['Precisão',
+                                                                           'Não Precisão']).applymap(
             pintar_celulas_arr_not_ifr,
             subset=['Arremetidas',
                     'IFR sem PA',
@@ -73,10 +73,18 @@ def gerar_cesta_basica(trimestre,
     quantidades = []
     tipo_procedimentos = []
 
+    lista_id_voos = detalhes_tripulantes_df['IdVoo'].unique()
+    voos_sem_descida = descidas_df[~descidas_df['IdVoo'].isin(lista_id_voos)]
+
     for i, row_tripulantes in detalhes_trip_filtrada.iterrows():
         id_voo = row_tripulantes['IdVoo']
         trigrama = row_tripulantes['Tripulante']
         descidas_filtrada = descidas_df[descidas_df['IdVoo'] == id_voo]
+
+        for k, row_nao_descida in voos_sem_descida.iterrows():
+            trigramas.append(trigrama)
+            quantidades.append(0)
+            tipo_procedimentos.append('')
 
         for j, row_descida in descidas_filtrada.iterrows():
             trigramas.append(trigrama)
@@ -94,7 +102,7 @@ def gerar_cesta_basica(trimestre,
     df_final.drop(columns=['quantidades', 'tipo de procedimento'], inplace=True)
     df_final = df_final.groupby(by='Tripulante')[['Precisão', 'Não Precisão']].sum().round(0).astype(int)
     detalhes_trip_filtrada.loc[:, 'Noturno'] = detalhes_trip_filtrada['Noturno'].apply(
-        lambda x: 0 if str(x) == "00:00:00" else 1)
+        lambda x: 0 if str(x) == "00:00" else 1)
 
     cesta_basica_tripulantes = detalhes_trip_filtrada.groupby(by='Tripulante', as_index=False)[['Arremetidas',
                                                                                                 'IFR sem PA',
@@ -119,10 +127,11 @@ def gerar_cesta_basica(trimestre,
     cesta_basica_completa = pd.concat([cesta_basica, cesta_basica_zerados], ignore_index=True).set_index('Tripulante')
 
     cesta_basica_pintada = cesta_basica_completa.style.applymap(pintar_celulas_pr_np,
-                                                           subset=['Precisão',
-                                                                   'Não Precisão']).applymap(
+                                                                subset=['Precisão',
+                                                                        'Não Precisão']).applymap(
         pintar_celulas_arr_not_ifr,
         subset=['Arremetidas',
                 'IFR sem PA',
                 'Noturno'])
+
     return cesta_basica_pintada
