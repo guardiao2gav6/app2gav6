@@ -94,6 +94,7 @@ pau_de_sebo_filtrado = pau_de_sebo_filtrado.sort_values('tripulante', ascending=
 
 pau_de_sebo_chart_base = alt.Chart(pau_de_sebo_filtrado)
 pau_de_sebo_chart = pau_de_sebo_chart_base.mark_bar(
+    width=30,
     color="#194d82"
 ).encode(
     x=alt.X('tripulante:N', sort=alt.EncodingSortField(field='tempo_de_voo_minutos', op='sum', order='descending'),
@@ -112,7 +113,7 @@ meta_line = alt.Chart(pd.DataFrame({'y': [meta_horas]})).mark_rule(
 )
 
 rotulo_horas_voadas = pau_de_sebo_chart_base.mark_text(
-    fontSize=18,
+    fontSize=16,
     dy=-20,
     color='#747575'
 ).encode(

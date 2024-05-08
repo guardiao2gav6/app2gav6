@@ -103,7 +103,7 @@ table2['Voado'] = table2['horas_voadas_minutos'].map(time_handler.transform_minu
 # Gráfico planejamento mensal
 planejamento_mensal_base = alt.Chart(table2)
 voado = planejamento_mensal_base.mark_bar(color="#00e842",
-                                          width=60).encode(
+                                          width=30).encode(
     x=alt.X('month(mes_numero):O', axis=alt.Axis(labelFontSize=16)),
     y=alt.Y('sum(horas_voadas_minutos):Q', axis=alt.Axis(title='', labels=False)),
     tooltip=['Planejado:N', 'Voado:N'])
