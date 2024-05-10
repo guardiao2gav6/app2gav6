@@ -49,7 +49,9 @@ class Dados:
         detalhes_tripulantes_df['data_voo'] = pd.to_datetime(detalhes_tripulantes_df['data_voo'])
         detalhes_tripulantes_df = detalhes_tripulantes_df[~detalhes_tripulantes_df['tripulante'].isin(['FIC',
                                                                                                        'HEL',
+                                                                                                       'TAI',
                                                                                                        'RND',
+                                                                                                       'TSU',
                                                                                                        'DGO',
                                                                                                        'BOS',
                                                                                                        'LET'])]
@@ -78,6 +80,8 @@ class Dados:
 
         dados_pessoais_df = dados_pessoais_df[~dados_pessoais_df['trigrama'].isin(['FIC',
                                                                                    'HEL',
+                                                                                   'TAI',
+                                                                                   'TSU',
                                                                                    'RND',
                                                                                    'DGO',
                                                                                    'BOS',
