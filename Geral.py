@@ -141,13 +141,13 @@ rotulo_voado = alt.Chart(table2).mark_text(
 
 )
 
-grafico = (linha + voado + rotulos_planejado).properties(title=alt.TitleParams(
+grafico = voado.properties(title=alt.TitleParams(
     text='Planejado vs Voado - Horas COMPREP',
     fontSize=24,
     anchor='middle'
 ))
 
-st.altair_chart(grafico, use_container_width=True)
+# st.altair_chart(grafico, use_container_width=True)
 
 if st.checkbox(label='Mostrar dados - Planejamento horas COMPREP'):
     table3 = planejamento_horas_df

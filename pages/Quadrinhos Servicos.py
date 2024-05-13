@@ -91,10 +91,10 @@ def filter_data(data):
 
 # Carregando DADOS
 dados = Dados()
-OPO_df = dados.get_OPO_df()
+OPO_df = dados.get_opo_df()
 dados_pessoais_df = dados.get_dados_pessoais()
 detalhes_tripulantes_sobreaviso = dados.get_detalhes_tripulantes_sobreaviso()
-detalhes_tripulantes_sobreaviso_R99_final = dados.get_detalhes_tripulantes_sobreaviso_R99()
+detalhes_tripulantes_sobreaviso_R99_final = dados.get_detalhes_tripulantes_sobreaviso_r99()
 
 
 # Obtendo apenas os miitares que tiram OPO ou SA

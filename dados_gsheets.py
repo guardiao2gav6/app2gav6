@@ -1,4 +1,5 @@
 from streamlit_gsheets import GSheetsConnection
+from urllib.error import URLError
 import pandas as pd
 import time_handler
 import streamlit as st
@@ -6,16 +7,24 @@ import streamlit as st
 
 class Dados:
     url = r"https://docs.google.com/spreadsheets/d/1pHRfuc0vHjFLWdZ4DlX7OencLG6vIyCbtj53Jk88UR8/edit?usp=sharing"
-    # Criando conexão com Google Sheets
     conn = st.connection("gsheets", type=GSheetsConnection)
-    ttl = 10 * 60
+    ttl = 60 * 5
 
     def __init__(self):
         pass
 
+    def connect_to_worksheet(self, id_worksheet):
+        try:
+            worksheet = self.conn.read(spreadsheet=self.url,
+                                       ttl=self.ttl,
+                                       worksheet=id_worksheet)
+            return worksheet
+        except URLError:
+            return st.error("Verifique sua conexão com a internet")
+
     def generate_registros_voos_df(self):
-        ID_registros_de_voos = "0"
-        registros_de_voos_df = self.conn.read(spreadsheet=self.url, ttl=self.ttl, worksheet=ID_registros_de_voos)
+        id_registros_de_voos = "0"
+        registros_de_voos_df = self.connect_to_worksheet(id_worksheet=id_registros_de_voos)
         registros_de_voos_df['tempo_de_voo'] = registros_de_voos_df['tempo_de_voo'].astype(str)
         registros_de_voos_df['tempo_de_voo_minutos'] = registros_de_voos_df['tempo_de_voo'].map(
             time_handler.transform_duration_string_to_minutes)
@@ -27,8 +36,8 @@ class Dados:
         return registros_de_voos_df
 
     def generate_detalhes_tripulantes_df(self):
-        ID_detalhes_trip_voo = "1702473124"
-        detalhes_tripulantes_df = self.conn.read(spreadsheet=self.url, ttl=self.ttl, worksheet=ID_detalhes_trip_voo)
+        id_detalhes_trip_voo = "1702473124"
+        detalhes_tripulantes_df = self.connect_to_worksheet(id_worksheet=id_detalhes_trip_voo)
         detalhes_tripulantes_df['data_voo'] = pd.to_datetime(detalhes_tripulantes_df['data_voo'],
                                                              format="%d/%m/%Y").dt.date
         detalhes_tripulantes_df['posicao_a_bordo'] = detalhes_tripulantes_df['posicao_a_bordo'].fillna(True)
@@ -58,11 +67,9 @@ class Dados:
         return detalhes_tripulantes_df
 
     def generate_meta_pilotos_df(self):
-        ID_meta_pilotos = "1746517579"
-        meta_pilotos_df = self.conn.read(spreadsheet=self.url,
-                                         ttl=self.ttl,
-                                         worksheet=ID_meta_pilotos).drop(columns=['meta_comprep',
-                                                                                  'meta_esquadrao'])
+        id_meta_pilotos = "1746517579"
+        meta_pilotos_df = self.connect_to_worksheet(id_worksheet=id_meta_pilotos).drop(columns=['meta_comprep',
+                                                                                                'meta_esquadrao'])
         meta_pilotos_df['meta_comprep_minutos'] = meta_pilotos_df['meta_comprep_minutos'] * 1000
         meta_pilotos_df['meta_esquadrao_minutos'] = meta_pilotos_df['meta_esquadrao_minutos'] * 1000
         meta_pilotos_df['meta_comprep'] = meta_pilotos_df['meta_comprep_minutos'].map(
@@ -73,10 +80,8 @@ class Dados:
         return meta_pilotos_df
 
     def get_dados_pessoais(self):
-        ID_dados_pessoais = "1235248626"
-        dados_pessoais_df = self.conn.read(spreadsheet=self.url,
-                                           worksheet=ID_dados_pessoais,
-                                           ttl=self.ttl)
+        id_dados_pessoais = "1235248626"
+        dados_pessoais_df = self.connect_to_worksheet(id_worksheet=id_dados_pessoais)
 
         dados_pessoais_df = dados_pessoais_df[~dados_pessoais_df['trigrama'].isin(['FIC',
                                                                                    'HEL',
@@ -88,18 +93,17 @@ class Dados:
                                                                                    'LET'])]
         return dados_pessoais_df
 
-    def get_OPO_df(self):
-        ID_OPO = "117652390"
-        OPO_df = self.conn.read(spreadsheet=self.url,
-                                ttl=self.ttl,
-                                worksheet=ID_OPO)
-        return OPO_df
+    def get_opo_df(self):
+        id_opo = "117652390"
+        opo_df = self.connect_to_worksheet(id_worksheet=id_opo)
+
+        return opo_df
 
     def get_sobreaviso_df(self):
-        ID_sobreaviso_df = "110642623"
+        id_sobreaviso_df = "110642623"
         sobreaviso_df = self.conn.read(spreadsheet=self.url,
                                        ttl=self.ttl,
-                                       worksheet=ID_sobreaviso_df)[['IdSobreaviso',
+                                       worksheet=id_sobreaviso_df)[['IdSobreaviso',
                                                                     'data',
                                                                     'localidade',
                                                                     'cor_portugues',
@@ -108,10 +112,10 @@ class Dados:
         return sobreaviso_df
 
     def get_detalhes_tripulantes_sobreaviso(self):
-        ID_detalhes_tripulantes_sobreaviso = "950795421"
+        id_detalhes_tripulantes_sobreaviso = "950795421"
         detalhes_tripulantes_sobreaviso_df = self.conn.read(spreadsheet=self.url,
                                                             ttl=self.ttl,
-                                                            worksheet=ID_detalhes_tripulantes_sobreaviso)
+                                                            worksheet=id_detalhes_tripulantes_sobreaviso)
 
         sobreaviso_df = self.get_sobreaviso_df()
 
@@ -124,11 +128,11 @@ class Dados:
 
         return detalhes_tripulantes_sobreaviso_df
 
-    def get_sobreaviso_R99(self):
-        ID_sobreaviso_R99 = "1866968545"
+    def get_sobreaviso_r99(self):
+        id_sobreaviso_r99 = "1866968545"
         sobreaviso_r99_df = self.conn.read(spreadsheet=self.url,
                                            ttl=self.ttl,
-                                           worksheet=ID_sobreaviso_R99)[['IdSobreavisoR99',
+                                           worksheet=id_sobreaviso_r99)[['IdSobreavisoR99',
                                                                          'data_inicial',
                                                                          'data_final',
                                                                          'localidade',
@@ -136,12 +140,12 @@ class Dados:
                                                                          ]]
         return sobreaviso_r99_df
 
-    def get_detalhes_tripulantes_sobreaviso_R99(self):
-        ID_detalhes_sobreaviso_R99 = "1776688925"
+    def get_detalhes_tripulantes_sobreaviso_r99(self):
+        id_detalhes_sobreaviso_r99 = "1776688925"
         detalhes_tripulantes_sobreaviso_r99_df = self.conn.read(spreadsheet=self.url,
                                                                 ttl=self.ttl,
-                                                                worksheet=ID_detalhes_sobreaviso_R99)
-        sobreaviso_r99_df = self.get_sobreaviso_R99()
+                                                                worksheet=id_detalhes_sobreaviso_r99)
+        sobreaviso_r99_df = self.get_sobreaviso_r99()
         detalhes_tripulantes_sobreaviso_r99_df = detalhes_tripulantes_sobreaviso_r99_df.merge(
             sobreaviso_r99_df,
             how='left',
@@ -182,24 +186,25 @@ class Dados:
 
         return detalhes_tripulantes_sobreaviso_r99_df_final
 
-    def generate_color(self, row):
+    @staticmethod
+    def generate_color(row):
         if row in [6, 5, 4]:
             return "Vermelho"
         else:
             return "Preto"
 
     def get_aeronaves(self):
-        ID_aeronaves = "1102625224"
+        id_aeronaves = "1102625224"
         aeronaves_df = self.conn.read(spreadsheet=self.url,
                                       ttl=self.ttl,
-                                      worksheet=ID_aeronaves)
+                                      worksheet=id_aeronaves)
         return aeronaves_df
 
     def get_esforco_aereo(self):
-        ID_esforco_aereo = "321112704"
+        id_esforco_aereo = "321112704"
         esforco_aereo_df = self.conn.read(spreadsheet=self.url,
                                           ttl=self.ttl,
-                                          worksheet=ID_esforco_aereo)
+                                          worksheet=id_esforco_aereo)
 
         esforco_aereo_df['horas_alocadas_minutos'] = esforco_aereo_df['horas_alocadas'].map(
             time_handler.transform_duration_string_to_minutes)
@@ -211,10 +216,10 @@ class Dados:
         return esforco_aereo_df
 
     def get_planejamento_horas(self):
-        ID_planejamento_horas = "1484335037"
+        id_planejamento_horas = "1484335037"
         planejamento_horas_df = self.conn.read(spreadsheet=self.url,
                                                ttl=self.ttl,
-                                               worksheet=ID_planejamento_horas)
+                                               worksheet=id_planejamento_horas)
         planejamento_horas_df['horas_planejadas_minutos'] = planejamento_horas_df['horas_planejadas'].map(
             time_handler.transform_duration_string_to_minutes)
         planejamento_horas_df['horas_voadas_minutos'] = planejamento_horas_df['horas_voadas'].map(
@@ -222,15 +227,15 @@ class Dados:
         return planejamento_horas_df
 
     def get_aerodromos(self):
-        ID_aerodromos = '614914780'
+        id_aerodromos = '614914780'
         aerodromos_df = self.conn.read(spreadsheet=self.url,
                                        ttl=self.ttl,
-                                       worksheet=ID_aerodromos)
+                                       worksheet=id_aerodromos)
         return aerodromos_df
 
     def get_descidas(self):
-        ID_descidas = "1926401618"
+        id_descidas = "1926401618"
         descidas_df = self.conn.read(spreadsheet=self.url,
                                      ttl=self.ttl,
-                                     worksheet=ID_descidas)
+                                     worksheet=id_descidas)
         return descidas_df
