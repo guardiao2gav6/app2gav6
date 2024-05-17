@@ -25,6 +25,10 @@ class Dados:
     def generate_registros_voos_df(self):
         id_registros_de_voos = "0"
         registros_de_voos_df = self.connect_to_worksheet(id_worksheet=id_registros_de_voos)
+
+        mascara = registros_de_voos_df['IdVoo'].notna() & (registros_de_voos_df['IdVoo'] != '')
+        registros_de_voos_df = registros_de_voos_df[mascara]
+
         registros_de_voos_df['tempo_de_voo'] = registros_de_voos_df['tempo_de_voo'].astype(str)
         registros_de_voos_df['tempo_de_voo_minutos'] = registros_de_voos_df['tempo_de_voo'].map(
             time_handler.transform_duration_string_to_minutes)
