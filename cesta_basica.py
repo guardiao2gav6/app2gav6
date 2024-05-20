@@ -81,7 +81,7 @@ def gerar_cesta_basica(trimestre,
         trigrama = row_tripulantes['Tripulante']
         descidas_filtrada = descidas_df[descidas_df['IdVoo'] == id_voo]
 
-        for k, row_nao_descida in voos_sem_descida.iterrows():
+        for _, row_nao_descida in voos_sem_descida.iterrows():
             trigramas.append(trigrama)
             quantidades.append(0)
             tipo_procedimentos.append('')

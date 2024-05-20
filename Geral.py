@@ -6,17 +6,11 @@ import esforco_aereo
 import dados_gsheets
 
 
-def load_data():
-    dados = dados_gsheets.Dados()
-    esforco_aereo_data = dados.get_esforco_aereo()
-    registros_de_voos = dados.generate_registros_voos_df()
-    aeronaves = dados.get_aeronaves()
-    planejamento_horas = dados.get_planejamento_horas()
-    return esforco_aereo_data, registros_de_voos, aeronaves, planejamento_horas
-
-
-esforco_aereo_df, registros_de_voos_df, aeronaves_df, planejamento_horas_df = load_data()
-
+dados = dados_gsheets.Dados()
+esforco_aereo_df = dados.get_esforco_aereo()
+registros_de_voos_df = dados.generate_registros_voos_df()
+aeronaves_df = dados.get_aeronaves()
+planejamento_horas_df = dados.get_planejamento_horas()
 
 filtros_cols = st.columns([1, 1, 1, 1, 1])
 with filtros_cols[0]:
@@ -39,6 +33,7 @@ if not filtro_grupo:
     filtro_grupo = esforco_aereo_df['grupo'].unique()
 if not filtro_esforco_aereo:
     filtro_esforco_aereo = esforco_aereo_df.loc[esforco_aereo_df['grupo'].isin(filtro_grupo), 'esforco'].unique()
+
 
 # Tabela de Registros de Voos filtrada
 registros_de_voo_df_filtrada = registros_de_voos_df.loc[
@@ -187,7 +182,7 @@ if st.checkbox(label='Mostrar dados - Planejamento horas COMPREP'):
                                  (table3['aeronave'].isin(filtro_planejamento_anv) &
                                  (table3['esforco'].isin(filtro_planejamento_esforco)))]
 
-    st.dataframe(table3_filtrada, use_container_width=True)
+    # st.dataframe(table3_filtrada, use_container_width=True)
 
 st.markdown("#")
 st.markdown("#")
@@ -197,6 +192,7 @@ st.markdown("### Esforço Aéreo")
 cols = st.columns([1, 0.05, 1])
 with cols[0]:
     st.markdown('### E-99')
+
     st.markdown('##### COMPREP')
     E99_comprep_chart = esforco_aereo.gerar_grafico_esforco('E-99', 'COMPREP', esforco_aereo_df)
     st.altair_chart(E99_comprep_chart, use_container_width=True)
@@ -211,6 +207,7 @@ with cols[0]:
 
 with cols[2]:
     st.markdown('### R-99')
+
     st.markdown('##### COMPREP')
     R99_comprep_chart = esforco_aereo.gerar_grafico_esforco('R-99', 'COMPREP', esforco_aereo_df)
     st.altair_chart(R99_comprep_chart, use_container_width=True)

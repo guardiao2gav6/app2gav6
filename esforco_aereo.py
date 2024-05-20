@@ -11,37 +11,42 @@ def gerar_posicao_texto(row):
 
 
 def tratando_dados_esforco(esforco_aereo_data):
+    esforco_aereo_data_new = esforco_aereo_data.copy()
 
-    horas_gastas_sesqae_sop = esforco_aereo_data.loc[(esforco_aereo_data['esforco'] == 'SESQAE (*)'),
-                                                     ['aeronave', 'horas_gastas_minutos']]
+    horas_gastas_sesqae_sop = esforco_aereo_data_new.loc[(esforco_aereo_data_new['esforco'] == 'SESQAE (*)'),
+                                                         ['aeronave', 'horas_gastas_minutos']]
 
     horas_gastas_sesqae_sop_r99 = horas_gastas_sesqae_sop.loc[horas_gastas_sesqae_sop['aeronave'] == 'R-99',
                                                               'horas_gastas_minutos'].iloc[0]
     horas_gastas_sesqae_sop_e99 = horas_gastas_sesqae_sop.loc[horas_gastas_sesqae_sop['aeronave'] == 'E-99',
                                                               'horas_gastas_minutos'].iloc[0]
 
-    esforco_aereo_data.loc[(esforco_aereo_data['aeronave'] == 'R-99') & (esforco_aereo_data['esforco'] == 'SESQAE'),
-                           'horas_gastas_minutos'] += horas_gastas_sesqae_sop_r99
-    esforco_aereo_data.loc[(esforco_aereo_data['aeronave'] == 'E-99') & (esforco_aereo_data['esforco'] == 'SESQAE'),
-                           'horas_gastas_minutos'] += horas_gastas_sesqae_sop_e99
-    esforco_aereo_data.loc[(esforco_aereo_data['aeronave'] == 'R-99') & (esforco_aereo_data['esforco'] == 'SESQAE'),
-                           'saldo_horas_minutos'] -= horas_gastas_sesqae_sop_r99
-    esforco_aereo_data.loc[(esforco_aereo_data['aeronave'] == 'E-99') & (esforco_aereo_data['esforco'] == 'SESQAE'),
-                           'saldo_horas_minutos'] -= horas_gastas_sesqae_sop_e99
+    esforco_aereo_data_new.loc[(esforco_aereo_data_new['aeronave'] == 'R-99') &
+                               (esforco_aereo_data_new['esforco'] == 'SESQAE'), 'horas_gastas_minutos'] += \
+        horas_gastas_sesqae_sop_r99
+    esforco_aereo_data_new.loc[(esforco_aereo_data_new['aeronave'] == 'E-99') &
+                               (esforco_aereo_data_new['esforco'] == 'SESQAE'), 'horas_gastas_minutos'] +=\
+        horas_gastas_sesqae_sop_e99
+    esforco_aereo_data_new.loc[(esforco_aereo_data_new['aeronave'] == 'R-99') &
+                               (esforco_aereo_data_new['esforco'] == 'SESQAE'), 'saldo_horas_minutos'] -= \
+        horas_gastas_sesqae_sop_r99
+    esforco_aereo_data_new.loc[(esforco_aereo_data_new['aeronave'] == 'E-99') &
+                               (esforco_aereo_data_new['esforco'] == 'SESQAE'), 'saldo_horas_minutos'] -= \
+        horas_gastas_sesqae_sop_e99
 
-    esforco_aereo_data.loc[:, 'horas_gastas'] = esforco_aereo_data['horas_gastas_minutos'].map(
+    esforco_aereo_data_new.loc[:, 'horas_gastas'] = esforco_aereo_data_new['horas_gastas_minutos'].map(
         time_handler.transform_minutes_to_duration_string)
-    esforco_aereo_data.loc[:, 'saldo_horas'] = esforco_aereo_data['saldo_horas_minutos'].map(
+    esforco_aereo_data_new.loc[:, 'saldo_horas'] = esforco_aereo_data_new['saldo_horas_minutos'].map(
         time_handler.transform_minutes_to_duration_string)
-    esforco_aereo_data.loc[:, 'posicao_horas_voadas'] = 0
-    esforco_aereo_data.loc[esforco_aereo_data['horas_gastas'] == '00:00', 'horas_gastas'] = ''
+    esforco_aereo_data_new.loc[:, 'posicao_horas_voadas'] = 0
+    esforco_aereo_data_new.loc[esforco_aereo_data_new['horas_gastas'] == '00:00', 'horas_gastas'] = ''
 
-    mascara = esforco_aereo_data['esforco'] == 'SESQAE (*)'
-    esforco_aereo_data = esforco_aereo_data.drop(esforco_aereo_data[mascara].index)
+    mascara = esforco_aereo_data_new['esforco'] == 'SESQAE (*)'
+    esforco_aereo_data_new = esforco_aereo_data_new.drop(esforco_aereo_data_new[mascara].index)
 
-    esforco_aereo_data.loc[:, 'posicao_texto'] = esforco_aereo_data.apply(gerar_posicao_texto, axis=1)
+    esforco_aereo_data_new.loc[:, 'posicao_texto'] = esforco_aereo_data_new.apply(gerar_posicao_texto, axis=1)
 
-    return esforco_aereo_data
+    return esforco_aereo_data_new
 
 
 def gerar_grafico_esforco(aeronave, grupo, esforco_aereo_df):

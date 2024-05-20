@@ -41,7 +41,12 @@ class Aerodromo(Ponto):
 
 
 class Coordenadas(Ponto):
-    def __init__(self, latitude: str, longitude: str, isdep=False, ispouso=False, isonstation=False, horario_onstation=None):
+    def __init__(self, latitude: str,
+                 longitude: str,
+                 isdep=False,
+                 ispouso=False,
+                 isonstation=False,
+                 horario_onstation=None):
 
         super().__init__(
             nome=f'{latitude} / {longitude}',
