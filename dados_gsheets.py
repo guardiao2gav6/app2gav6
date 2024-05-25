@@ -142,6 +142,9 @@ class Dados:
                                                                          'localidade',
                                                                          'status_decod',
                                                                          ]]
+        mascara_sa_r99 = sobreaviso_r99_df['IdSobreavisoR99'].notna() & (sobreaviso_r99_df['IdSobreavisoR99'] != '')
+        sobreaviso_r99_df = sobreaviso_r99_df[mascara_sa_r99]
+
         return sobreaviso_r99_df
 
     def get_detalhes_tripulantes_sobreaviso_r99(self):
