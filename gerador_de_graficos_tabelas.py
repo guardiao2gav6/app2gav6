@@ -357,7 +357,7 @@ def gerar_grafico_pau_de_sebo_impressao():
     return grafico_pau_de_sebo, pau_de_sebo_dados
 
 
-def gerar_grafico_demais_funcoes_impressao(funcao, funcoes_agrupadas, lista_funcoes_alunos):
+def gerar_grafico_demais_funcoes(funcao, funcoes_agrupadas, lista_funcoes_alunos):
     pau_de_sebo_df = pau_de_sebo.pau_de_sebo(detalhes_tripulantes_df=detalhes_tripulantes_df,
                                              meta_pilotos_df=meta_pilotos_df,
                                              dados_pessoais_df=dados_pessoais_df)[1]
