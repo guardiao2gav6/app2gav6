@@ -1,10 +1,6 @@
-import pandas as pd
 import streamlit as st
-import pau_de_sebo
+import gerador_de_graficos_tabelas
 import altair as alt
-import time_handler
-import adaptacao
-from dados_gsheets import Dados
 
 
 def analisar_status_adaptacao(dias_restantes):
@@ -37,12 +33,6 @@ def checar_adaptacao(x):
         return 'Des.'
 
 
-# CARREGANDO DADOS PARA PÁGINA
-dados = Dados()
-detalhes_tripulantes_df = dados.generate_detalhes_tripulantes_df()
-meta_pilotos_df = dados.generate_meta_pilotos_df()
-dados_pessoais_df = dados.get_dados_pessoais()
-
 funcoes_agrupadas = {'Mecânicos': ['AC', 'MC', 'IC'],
                      'Chefe Controlador': ['AB-R', 'CC-R', 'IB-R'],
                      'COTAT': ['AJ', 'CT', 'IJ'],
@@ -66,70 +56,17 @@ filtro_funcoes = st.selectbox(label='Funções a Bordo', options=['Chefe Control
 
 st.markdown(f'#### Pau de Sebo - {filtro_funcoes}.')
 
-pau_de_sebo_df = pau_de_sebo.pau_de_sebo(detalhes_tripulantes_df=detalhes_tripulantes_df,
-                                         meta_pilotos_df=meta_pilotos_df,
-                                         dados_pessoais_df=dados_pessoais_df)[1]
-
-if filtro_funcoes == 'Oficiais':
-    pau_de_sebo_filtrado = pau_de_sebo_df.loc[(pau_de_sebo_df['funcao_a_bordo'].isin(
-        funcoes_agrupadas.get(filtro_funcoes))) | (pau_de_sebo_df['tripulante'] == 'DED')]
-else:
-    pau_de_sebo_filtrado = pau_de_sebo_df.loc[pau_de_sebo_df['funcao_a_bordo'].isin(
-        funcoes_agrupadas.get(filtro_funcoes))]
-
-pau_de_sebo_sem_alunos = pau_de_sebo_filtrado.drop(
-    pau_de_sebo_filtrado[pau_de_sebo_filtrado['funcao_a_bordo'].isin(lista_funcoes_alunos)].index)
-
-alunos = pau_de_sebo_filtrado.loc[pau_de_sebo_filtrado['funcao_a_bordo'].isin(
-    lista_funcoes_alunos), 'tripulante'].to_list()
-
-pau_de_sebo_sem_alunos = pau_de_sebo_sem_alunos.groupby(by='tripulante')[['tempo_de_voo_minutos']].sum().reset_index()
-meta_horas = pau_de_sebo_sem_alunos['tempo_de_voo_minutos'].mean() * 0.75
-meta_horas_formatado = time_handler.transform_minutes_to_duration_string(meta_horas)
-pau_de_sebo_filtrado = pau_de_sebo_filtrado.drop(columns='funcao_a_bordo')
-pau_de_sebo_filtrado = pau_de_sebo_filtrado.groupby(by='tripulante')[['tempo_de_voo_minutos']].sum().reset_index()
-pau_de_sebo_filtrado['Tempo de Voo'] = pau_de_sebo_filtrado['tempo_de_voo_minutos'].map(
-    time_handler.transform_minutes_to_duration_string)
-pau_de_sebo_filtrado = pau_de_sebo_filtrado.sort_values('tripulante', ascending=False)
-
-pau_de_sebo_chart_base = alt.Chart(pau_de_sebo_filtrado)
-pau_de_sebo_chart = pau_de_sebo_chart_base.mark_bar(
-    width=30,
-    color="#194d82"
-).encode(
-    x=alt.X('tripulante:N', sort=alt.EncodingSortField(field='tempo_de_voo_minutos', op='sum', order='descending'),
-            axis=alt.Axis(title='', labelFontSize=18, labelAngle=0)),
-    y=alt.Y('tempo_de_voo_minutos:Q', axis=alt.Axis(title='', labels=False)),
-    tooltip=[alt.Tooltip('tripulante:N', title='Trig: '),
-             alt.Tooltip('Tempo de Voo:N', title='Horas voadas: ')]
-)
-meta_line = alt.Chart(pd.DataFrame({'y': [meta_horas]})).mark_rule(
-    strokeDash=[10, 10],
-    strokeWidth=2.5,
-    color='#303030',
-    strokeOpacity=0.3
-).encode(
-    y='y:Q'
-)
-
-rotulo_horas_voadas = pau_de_sebo_chart_base.mark_text(
-    fontSize=16,
-    dy=-20,
-    color='#747575'
-).encode(
-    x=alt.X('tripulante:N', sort=alt.EncodingSortField(field='tempo_de_voo_minutos', op='sum', order='descending'),
-            axis=alt.Axis(title='', labelFontSize=18, labelAngle=0)),
-    y=alt.Y('tempo_de_voo_minutos:Q'),
-    text='Tempo de Voo:N'
-)
+pau_de_sebo_demais_funcoes_chart = gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes(filtro_funcoes,
+                                                                                            funcoes_agrupadas,
+                                                                                            lista_funcoes_alunos)
 
 if st.checkbox(label='Mostrar Dados'):
-    st.dataframe(pau_de_sebo_filtrado.drop(columns=['tempo_de_voo_minutos']).set_index('tripulante'))
+    st.dataframe(pau_de_sebo_demais_funcoes_chart[1].drop(columns=['tempo_de_voo_minutos']).set_index('tripulante'))
 
 
-st.altair_chart((pau_de_sebo_chart + meta_line + rotulo_horas_voadas).properties(title=alt.TitleParams(
+st.altair_chart(pau_de_sebo_demais_funcoes_chart[0].properties(title=alt.TitleParams(
     text=" ",
-    subtitle=f'A linha tracejada representa 75% da média ({meta_horas_formatado}).',
+    subtitle=f'A linha tracejada representa 75% da média ({pau_de_sebo_demais_funcoes_chart[2]}).',
     subtitleFontSize=16,
     fontSize=1,
     anchor='start'
@@ -147,80 +84,15 @@ st.markdown('*Alunos do ano corrente não entram neste cômputo*')
 
 # Adaptação Tripulantes
 st.markdown(f'#### Adaptação - {filtro_funcoes}')
-adaptacao_tripulantes_df = adaptacao.gerar_adaptacao(detalhes_tripulantes_df=detalhes_tripulantes_df,
-                                                     dados_pessoais_df=dados_pessoais_df)[1]
+adaptacao_demais_funcoes_chart = gerador_de_graficos_tabelas.gerar_grafico_adaptacao_demais_funcoes(filtro_funcoes,
+                                                                                                    funcoes_agrupadas)
 
-adaptacao_tripulantes_df = adaptacao_tripulantes_df.loc[
-    adaptacao_tripulantes_df['funcao_a_bordo'].isin(funcoes_agrupadas.get(filtro_funcoes))]
-adaptacao_tripulantes_df = adaptacao_tripulantes_df.sort_values(by=['dias_para_desadaptar',
-                                                                    'dias_sem_voar'],
-                                                                ascending=False)
-adaptacao_tripulantes_df['data_voo'] = adaptacao_tripulantes_df['data_voo'].map(lambda x: x.strftime("%d/%m/%Y"))
-adaptacao_tripulantes_df['voar_ate'] = adaptacao_tripulantes_df['voar_ate'].map(lambda x: x.strftime("%d/%m/%Y"))
-adaptacao_tripulantes_df['label_dias_restantes'] = adaptacao_tripulantes_df['dias_restantes'].map(checar_adaptacao)
-adaptacao_tripulantes_df['Status'] = adaptacao_tripulantes_df['dias_restantes'].map(analisar_status_adaptacao)
-adaptacao_tripulantes_df = adaptacao_tripulantes_df.sort_values(by=['dias_restantes'], ascending=True)
-adaptacao_df_tabela_tripulantes = adaptacao_tripulantes_df.drop(columns=['dias_para_desadaptar',
-                                                                         'label_dias_restantes',
-                                                                         'dias_restantes',
-                                                                         'funcao_a_bordo'])
-adaptacao_df_tabela_tripulantes = adaptacao_df_tabela_tripulantes.rename(columns={'tripulante': 'Trig.',
-                                                                                  'data_voo': 'Último Voo',
-                                                                                  'voar_ate': 'Voar até',
-                                                                                  'dias_sem_voar': 'Dias sem voar'})
-adaptacao_df_tabela_tripulantes = adaptacao_df_tabela_tripulantes.set_index('Trig.')
-adaptacao_df_tabela_tripulantes_pintada = adaptacao_df_tabela_tripulantes.style.apply(pintar_adaptacao, axis=1)
-
-adaptacao_tripulantes_base = alt.Chart(adaptacao_tripulantes_df)
-adaptacao_tripulantes_chart = adaptacao_tripulantes_base.mark_bar(
-    size=25
-).encode(
-    x=alt.X('tripulante:N', sort=alt.EncodingSortField(field='dias_para_desadaptar', op='sum', order='descending'),
-            axis=alt.Axis(title='', labelAngle=0, labelFontSize=16, labelPadding=20, ticks=False, labelAlign='center')),
-    y=alt.Y('dias_sem_voar:Q', axis=alt.Axis(labels=False, title='')),
-    color=alt.Color('funcao_a_bordo:N',
-                    legend=alt.Legend(orient='top',
-                                      title='Qualificação Operacional'),
-                    scale=alt.Scale(domain=[i for i in funcoes_agrupadas.get(filtro_funcoes)],
-                                    range=['#194d82', '#148212', '#b56d00'])),
-    tooltip=[alt.Tooltip('tripulante:N', title='Trig: '),
-             alt.Tooltip('data_voo:N', title='Último voo: '),
-             alt.Tooltip('voar_ate:N', title='Voar até: ')]
-)
-
-adaptacao_chart_max_sem_voar = adaptacao_tripulantes_base.mark_bar(
-    opacity=0.2,
-    color='grey',
-    size=25
-).encode(
-    x=alt.X('tripulante:N', sort=alt.EncodingSortField(field='dias_para_desadaptar', op='sum', order='descending')),
-    y=alt.Y('dias_para_desadaptar:Q'),
-    tooltip=[alt.Tooltip('tripulante:N', title='Trig: '),
-             alt.Tooltip('dias_para_desadaptar:Q', title='Dias para Desadaptar: ')]
-)
-
-rotulo_dias_restantes = adaptacao_tripulantes_base.mark_text(
-    color='#747575',
-    baseline='top',
-    fontSize=16,
-    dy=-25
-).encode(
-    x=alt.X('tripulante:N', sort=alt.EncodingSortField(field='dias_para_desadaptar', op='sum', order='descending')),
-    y=alt.Y('dias_sem_voar:Q'),
-    text='label_dias_restantes:N',
-    tooltip=alt.value(None)
-)
 if st.checkbox(label=f'Mostrar Dados - Adaptação {filtro_funcoes}'):
-    st.dataframe(adaptacao_df_tabela_tripulantes_pintada, use_container_width=True)
+    st.dataframe(adaptacao_demais_funcoes_chart[1], use_container_width=True)
 
+st.altair_chart(adaptacao_demais_funcoes_chart[0], use_container_width=True)
 
-st.altair_chart((adaptacao_chart_max_sem_voar + adaptacao_tripulantes_chart + rotulo_dias_restantes), use_container_width=True)
-
-percentual_adaptado = adaptacao_df_tabela_tripulantes['Status'].value_counts().loc['ADAPTADO'] / adaptacao_tripulantes_df.shape[0]
+percentual_adaptado = adaptacao_demais_funcoes_chart[2]['Status'].value_counts().loc['ADAPTADO'] / \
+                      adaptacao_demais_funcoes_chart[2].shape[0]
 if percentual_adaptado < 0.7:
     st.markdown(f'###### ATENÇÃO: {round((1 - percentual_adaptado) * 100, 2)}% do QT selecionado está DESADAPTADO')
-#
-# st.markdown('- Os números escritos acima das barras representam a quantidade de dias restantes que o militar ainda pode'
-#             'ficar sem voar.')
-# st.markdown('- Por enquanto, esses dados levam em consideração apenas os voos realizados, sendo assim, o escalante de '
-#             'COAM deve ficar atento para possíveis readaptações em MPTS que não serão contabilizadas aqui.')

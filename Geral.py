@@ -4,13 +4,20 @@ import time_handler
 import altair as alt
 import esforco_aereo
 import dados_gsheets
-
+import teste_apresentacao
 
 dados = dados_gsheets.Dados()
 esforco_aereo_df = dados.get_esforco_aereo()
 registros_de_voos_df = dados.generate_registros_voos_df()
 aeronaves_df = dados.get_aeronaves()
 planejamento_horas_df = dados.get_planejamento_horas()
+
+# Botão gerar apresentação
+if st.sidebar.button(label='Gerar Apresentação'):
+    dicionario_de_graficos = teste_apresentacao.generate_charts_dict()
+    presentation_io = teste_apresentacao.create_presentation(dicionario_de_graficos)
+    st.sidebar.markdown(teste_apresentacao.get_binary_file_downloader_link(presentation_io, 'presentation.pptx'),
+                        unsafe_allow_html=True)
 
 filtros_cols = st.columns([1, 1, 1, 1, 1])
 with filtros_cols[0]:
@@ -144,48 +151,46 @@ grafico = voado.properties(title=alt.TitleParams(
 
 # st.altair_chart(grafico, use_container_width=True)
 
-if st.checkbox(label='Mostrar dados - Planejamento horas COMPREP'):
-    table3 = planejamento_horas_df
-    table3['Planejado'] = table3['horas_planejadas_minutos'].map(time_handler.transform_minutes_to_duration_string)
-    table3['Voado'] = table3['horas_voadas_minutos'].map(time_handler.transform_minutes_to_duration_string)
-    table3 = table3.drop(columns=['horas_planejadas_minutos',
-                                  'horas_voadas_minutos',
-                                  'mes_numero',
-                                  'horas_planejadas',
-                                  'horas_voadas'])
-    table3['mes'] = table3['mes'].dt.month_name()
-    table3 = table3.set_index('mes')
-    table3 = table3.reindex(columns=['aeronave', 'esforco', 'Planejado', 'Voado', 'observacoes'])
+# if st.checkbox(label='Mostrar dados - Planejamento horas COMPREP'):
+#     table3 = planejamento_horas_df
+#     table3['Planejado'] = table3['horas_planejadas_minutos'].map(time_handler.transform_minutes_to_duration_string)
+#     table3['Voado'] = table3['horas_voadas_minutos'].map(time_handler.transform_minutes_to_duration_string)
+#     table3 = table3.drop(columns=['horas_planejadas_minutos',
+#                                   'horas_voadas_minutos',
+#                                   'mes_numero',
+#                                   'horas_planejadas',
+#                                   'horas_voadas'])
+#     table3['mes'] = table3['mes'].dt.month_name()
+#     table3 = table3.set_index('mes')
+#     table3 = table3.reindex(columns=['aeronave', 'esforco', 'Planejado', 'Voado', 'observacoes'])
+#
+#     cols_planejamento = st.columns([1, 1, 1])
+#     with cols_planejamento[0]:
+#         filtro_planejamento_mes = st.multiselect(label='Mês',
+#                                                  options=table3.index.unique(),
+#                                                  key='filtro_planejamento_mes')
+#     with cols_planejamento[1]:
+#         filtro_planejamento_anv = st.multiselect(label='Aeronave',
+#                                                  options=table3['aeronave'].unique(),
+#                                                  key='filtro_planejamento_anv')
+#     with cols_planejamento[2]:
+#         filtro_planejamento_esforco = st.multiselect(label='Esforço',
+#                                                      options=table3['esforco'].unique(),
+#                                                      key='filtro_planejamento_esforco')
+#
+#     if not filtro_planejamento_mes:
+#         filtro_planejamento_mes = table3.index.unique()
+#     if not filtro_planejamento_anv:
+#         filtro_planejamento_anv = table3['aeronave'].unique()
+#     if not filtro_planejamento_esforco:
+#         filtro_planejamento_esforco = table3['esforco'].unique()
+#
+#     table3_filtrada = table3.loc[(table3.index.isin(filtro_planejamento_mes)) &
+#                                  (table3['aeronave'].isin(filtro_planejamento_anv) &
+#                                  (table3['esforco'].isin(filtro_planejamento_esforco)))]
+#
+#     # st.dataframe(table3_filtrada, use_container_width=True)
 
-    cols_planejamento = st.columns([1, 1, 1])
-    with cols_planejamento[0]:
-        filtro_planejamento_mes = st.multiselect(label='Mês',
-                                                 options=table3.index.unique(),
-                                                 key='filtro_planejamento_mes')
-    with cols_planejamento[1]:
-        filtro_planejamento_anv = st.multiselect(label='Aeronave',
-                                                 options=table3['aeronave'].unique(),
-                                                 key='filtro_planejamento_anv')
-    with cols_planejamento[2]:
-        filtro_planejamento_esforco = st.multiselect(label='Esforço',
-                                                     options=table3['esforco'].unique(),
-                                                     key='filtro_planejamento_esforco')
-
-    if not filtro_planejamento_mes:
-        filtro_planejamento_mes = table3.index.unique()
-    if not filtro_planejamento_anv:
-        filtro_planejamento_anv = table3['aeronave'].unique()
-    if not filtro_planejamento_esforco:
-        filtro_planejamento_esforco = table3['esforco'].unique()
-
-    table3_filtrada = table3.loc[(table3.index.isin(filtro_planejamento_mes)) &
-                                 (table3['aeronave'].isin(filtro_planejamento_anv) &
-                                 (table3['esforco'].isin(filtro_planejamento_esforco)))]
-
-    # st.dataframe(table3_filtrada, use_container_width=True)
-
-st.markdown("#")
-st.markdown("#")
 st.markdown('---')
 st.markdown("### Esforço Aéreo")
 
