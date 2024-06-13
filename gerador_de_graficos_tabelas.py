@@ -357,7 +357,7 @@ def gerar_grafico_pau_de_sebo_impressao():
     return grafico_pau_de_sebo, pau_de_sebo_dados
 
 
-def gerar_grafico_demais_funcoes(funcao, funcoes_agrupadas, lista_funcoes_alunos):
+def gerar_grafico_demais_funcoes_impressao(funcao, funcoes_agrupadas, lista_funcoes_alunos):
     pau_de_sebo_df = pau_de_sebo.pau_de_sebo(detalhes_tripulantes_df=detalhes_tripulantes_df,
                                              meta_pilotos_df=meta_pilotos_df,
                                              dados_pessoais_df=dados_pessoais_df)[1]
@@ -406,6 +406,67 @@ def gerar_grafico_demais_funcoes(funcao, funcoes_agrupadas, lista_funcoes_alunos
 
     rotulo_horas_voadas = pau_de_sebo_chart_base.mark_text(
         fontSize=10,
+        dy=-10,
+        color='#242B2B'
+    ).encode(
+        x=alt.X('tripulante:N', sort=alt.EncodingSortField(field='tempo_de_voo_minutos', op='sum', order='descending'),
+                axis=alt.Axis(title='', labelFontSize=18, labelAngle=0)),
+        y=alt.Y('tempo_de_voo_minutos:Q'),
+        text='Tempo de Voo:N'
+    )
+
+    return (meta_line + pau_de_sebo_chart + rotulo_horas_voadas), pau_de_sebo_filtrado, meta_horas_formatado
+
+
+def gerar_grafico_demais_funcoes(funcao, funcoes_agrupadas, lista_funcoes_alunos):
+    pau_de_sebo_df = pau_de_sebo.pau_de_sebo(detalhes_tripulantes_df=detalhes_tripulantes_df,
+                                             meta_pilotos_df=meta_pilotos_df,
+                                             dados_pessoais_df=dados_pessoais_df)[1]
+
+    if funcao == 'Oficiais':
+        pau_de_sebo_filtrado = pau_de_sebo_df.loc[(pau_de_sebo_df['funcao_a_bordo'].isin(
+            funcoes_agrupadas.get(funcao))) | (pau_de_sebo_df['tripulante'] == 'DED')]
+    else:
+        pau_de_sebo_filtrado = pau_de_sebo_df.loc[pau_de_sebo_df['funcao_a_bordo'].isin(
+            funcoes_agrupadas.get(funcao))]
+
+    pau_de_sebo_sem_alunos = pau_de_sebo_filtrado.drop(
+        pau_de_sebo_filtrado[pau_de_sebo_filtrado['funcao_a_bordo'].isin(lista_funcoes_alunos)].index)
+    # alunos = pau_de_sebo_filtrado.loc[pau_de_sebo_filtrado['funcao_a_bordo'].isin(
+    #     lista_funcoes_alunos), 'tripulante'].to_list()
+
+    pau_de_sebo_sem_alunos = pau_de_sebo_sem_alunos.groupby(by='tripulante')[
+        ['tempo_de_voo_minutos']].sum().reset_index()
+    meta_horas = pau_de_sebo_sem_alunos['tempo_de_voo_minutos'].mean() * 0.75
+    meta_horas_formatado = time_handler.transform_minutes_to_duration_string(meta_horas)
+    pau_de_sebo_filtrado = pau_de_sebo_filtrado.drop(columns='funcao_a_bordo')
+    pau_de_sebo_filtrado = pau_de_sebo_filtrado.groupby(by='tripulante')[['tempo_de_voo_minutos']].sum().reset_index()
+    pau_de_sebo_filtrado['Tempo de Voo'] = pau_de_sebo_filtrado['tempo_de_voo_minutos'].map(
+        time_handler.transform_minutes_to_duration_string)
+    pau_de_sebo_filtrado = pau_de_sebo_filtrado.sort_values('tripulante', ascending=False)
+
+    pau_de_sebo_chart_base = alt.Chart(pau_de_sebo_filtrado)
+    pau_de_sebo_chart = pau_de_sebo_chart_base.mark_bar(
+        size=30,
+        color="#194d82"
+    ).encode(
+        x=alt.X('tripulante:N', sort=alt.EncodingSortField(field='tempo_de_voo_minutos', op='sum', order='descending'),
+                axis=alt.Axis(title='', labelFontSize=18, labelAngle=0, labelPadding=10, labelColor='#747575')),
+        y=alt.Y('tempo_de_voo_minutos:Q', axis=alt.Axis(title='', labels=False)),
+        tooltip=[alt.Tooltip('tripulante:N', title='Trig: '),
+                 alt.Tooltip('Tempo de Voo:N', title='Horas voadas: ')]
+    )
+    meta_line = alt.Chart(pd.DataFrame({'y': [meta_horas]})).mark_rule(
+        strokeDash=[10, 10],
+        strokeWidth=2.5,
+        color='#303030',
+        strokeOpacity=0.3
+    ).encode(
+        y='y:Q'
+    )
+
+    rotulo_horas_voadas = pau_de_sebo_chart_base.mark_text(
+        fontSize=16,
         dy=-10,
         color='#242B2B'
     ).encode(

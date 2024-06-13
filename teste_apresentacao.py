@@ -60,23 +60,23 @@ def generate_charts_dict():
     return {
         "Pau de Sebo - PIL": generate_chart_image(pau_de_sebo_chart),
         "Adaptação - PIL": generate_chart_image(adaptacao_chart),
-        'Pau de Sebo - OFICIAIS': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes(
+        'Pau de Sebo - OFICIAIS': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes_impressao(
             'Oficiais', funcoes_agrupadas, lista_funcoes_alunos)[0]),
-        'Pau de Sebo - CC': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes(
+        'Pau de Sebo - CC': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes_impressao(
             'Chefe Controlador', funcoes_agrupadas, lista_funcoes_alunos)[0]),
-        'Pau de Sebo - COTAT': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes(
+        'Pau de Sebo - COTAT': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes_impressao(
             'COTAT', funcoes_agrupadas, lista_funcoes_alunos)[0]),
-        'Pau de Sebo - MC': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes(
+        'Pau de Sebo - MC': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes_impressao(
             'Mecânicos', funcoes_agrupadas, lista_funcoes_alunos)[0]),
-        'Pau de Sebo - COAM': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes(
+        'Pau de Sebo - COAM': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes_impressao(
             'COAM', funcoes_agrupadas, lista_funcoes_alunos)[0]),
-        'Pau de Sebo - O1': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes(
+        'Pau de Sebo - O1': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes_impressao(
             'O1', funcoes_agrupadas, lista_funcoes_alunos)[0]),
-        'Pau de Sebo - O3': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes(
+        'Pau de Sebo - O3': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes_impressao(
             'O3', funcoes_agrupadas, lista_funcoes_alunos)[0]),
-        'Pau de Sebo - MA-E': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes(
+        'Pau de Sebo - MA-E': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes_impressao(
             'MA-E', funcoes_agrupadas, lista_funcoes_alunos)[0]),
-        'Pau de Sebo - MA-R': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes(
+        'Pau de Sebo - MA-R': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes_impressao(
             'MA-R', funcoes_agrupadas, lista_funcoes_alunos)[0]),
         'Esforço Aéreo - E99 COMPREP': generate_esforco_aereo_chart_image(
             gerador_de_graficos_tabelas.gerar_grafico_esforco_aereo_impressao('E-99', 'COMPREP')),
