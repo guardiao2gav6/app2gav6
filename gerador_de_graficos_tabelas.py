@@ -357,7 +357,7 @@ def gerar_grafico_pau_de_sebo_impressao():
     return grafico_pau_de_sebo, pau_de_sebo_dados
 
 
-def gerar_grafico_demais_funcoes(funcao, funcoes_agrupadas, lista_funcoes_alunos):
+def gerar_grafico_demais_funcoes_impressao(funcao, funcoes_agrupadas, lista_funcoes_alunos):
     pau_de_sebo_df = pau_de_sebo.pau_de_sebo(detalhes_tripulantes_df=detalhes_tripulantes_df,
                                              meta_pilotos_df=meta_pilotos_df,
                                              dados_pessoais_df=dados_pessoais_df)[1]
@@ -386,11 +386,15 @@ def gerar_grafico_demais_funcoes(funcao, funcoes_agrupadas, lista_funcoes_alunos
 
     pau_de_sebo_chart_base = alt.Chart(pau_de_sebo_filtrado)
     pau_de_sebo_chart = pau_de_sebo_chart_base.mark_bar(
-        size=30,
+        size=20,
         color="#194d82"
     ).encode(
         x=alt.X('tripulante:N', sort=alt.EncodingSortField(field='tempo_de_voo_minutos', op='sum', order='descending'),
-                axis=alt.Axis(title='', labelFontSize=16, labelAngle=0, labelPadding=10, labelColor='#747575')),
+                axis=alt.Axis(title='',
+                              labelFontSize=12,
+                              labelAngle=0,
+                              labelPadding=10,
+                              labelColor='#747575')),
         y=alt.Y('tempo_de_voo_minutos:Q', axis=alt.Axis(title='', labels=False)),
         tooltip=[alt.Tooltip('tripulante:N', title='Trig: '),
                  alt.Tooltip('Tempo de Voo:N', title='Horas voadas: ')]
