@@ -1,6 +1,16 @@
 import streamlit as st
 import gerador_de_graficos_tabelas
 import altair as alt
+from dados_gsheets import Dados
+
+
+dados = Dados()
+detalhes_tripulantes_df = dados.generate_detalhes_tripulantes_df()
+meta_pilotos_df = dados.generate_meta_pilotos_df()
+dados_pessoais_df = dados.get_dados_pessoais()
+descidas_df = dados.get_descidas()
+aeronaves_df = dados.get_aeronaves()
+esforco_aereo_df = dados.get_esforco_aereo()
 
 
 def analisar_status_adaptacao(dias_restantes):
@@ -56,9 +66,13 @@ filtro_funcoes = st.selectbox(label='Funções a Bordo', options=['Chefe Control
 
 st.markdown(f'#### Pau de Sebo - {filtro_funcoes}.')
 
-pau_de_sebo_demais_funcoes_chart = gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes(filtro_funcoes,
-                                                                                            funcoes_agrupadas,
-                                                                                            lista_funcoes_alunos)
+pau_de_sebo_demais_funcoes_chart = gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes(
+    funcao=filtro_funcoes,
+    funcoes_agrupadas=funcoes_agrupadas,
+    lista_funcoes_alunos=lista_funcoes_alunos,
+    detalhes_tripulantes_df=detalhes_tripulantes_df,
+    meta_pilotos_df=meta_pilotos_df,
+    dados_pessoais_df=dados_pessoais_df)
 
 if st.checkbox(label='Mostrar Dados'):
     st.dataframe(pau_de_sebo_demais_funcoes_chart[1].drop(columns=['tempo_de_voo_minutos']).set_index('tripulante'))
@@ -84,8 +98,12 @@ st.markdown('*Alunos do ano corrente não entram neste cômputo*')
 
 # Adaptação Tripulantes
 st.markdown(f'#### Adaptação - {filtro_funcoes}')
-adaptacao_demais_funcoes_chart = gerador_de_graficos_tabelas.gerar_grafico_adaptacao_demais_funcoes(filtro_funcoes,
-                                                                                                    funcoes_agrupadas)
+adaptacao_demais_funcoes_chart = gerador_de_graficos_tabelas.gerar_grafico_adaptacao_demais_funcoes(
+    funcao=filtro_funcoes,
+    funcoes_agrupadas=funcoes_agrupadas,
+    detalhes_tripulantes_df=detalhes_tripulantes_df,
+    dados_pessoais_df=dados_pessoais_df
+)
 
 if st.checkbox(label=f'Mostrar Dados - Adaptação {filtro_funcoes}'):
     st.dataframe(adaptacao_demais_funcoes_chart[1], use_container_width=True)

@@ -1,20 +1,9 @@
 import pau_de_sebo
 import altair as alt
 import adaptacao
-from dados_gsheets import Dados
 import time_handler
 import pandas as pd
 import esforco_aereo
-
-
-# Carregando dados
-dados = Dados()
-detalhes_tripulantes_df = dados.generate_detalhes_tripulantes_df()
-meta_pilotos_df = dados.generate_meta_pilotos_df()
-dados_pessoais_df = dados.get_dados_pessoais()
-descidas_df = dados.get_descidas()
-aeronaves_df = dados.get_aeronaves()
-esforco_aereo_df = dados.get_esforco_aereo()
 
 
 def analisar_status_adaptacao(dias_restantes):
@@ -46,7 +35,9 @@ def checar_adaptacao(x):
         return 'Des.'
 
 
-def gerar_grafico_pau_de_sebo():
+def gerar_grafico_pau_de_sebo(detalhes_tripulantes_df,
+                              meta_pilotos_df,
+                              dados_pessoais_df):
 
     pau_de_sebo_df = pau_de_sebo.pau_de_sebo(detalhes_tripulantes_df=detalhes_tripulantes_df,
                                              meta_pilotos_df=meta_pilotos_df,
@@ -120,7 +111,8 @@ def gerar_grafico_pau_de_sebo():
     return grafico_pau_de_sebo, pau_de_sebo_dados
 
 
-def gerar_grafico_adaptacao():
+def gerar_grafico_adaptacao(detalhes_tripulantes_df,
+                            dados_pessoais_df):
     adaptacao_pilotos = adaptacao.gerar_adaptacao(detalhes_tripulantes_df=detalhes_tripulantes_df,
                                                   dados_pessoais_df=dados_pessoais_df)[0]
 
@@ -197,7 +189,8 @@ def gerar_grafico_adaptacao():
     return grafico_adaptacao, adaptacao_df_tabela_pintada
 
 
-def gerar_grafico_adaptacao_impressao():
+def gerar_grafico_adaptacao_impressao(detalhes_tripulantes_df,
+                                      dados_pessoais_df):
     adaptacao_pilotos = adaptacao.gerar_adaptacao(detalhes_tripulantes_df=detalhes_tripulantes_df,
                                                   dados_pessoais_df=dados_pessoais_df)[0]
 
@@ -281,7 +274,9 @@ def gerar_grafico_adaptacao_impressao():
     return grafico_adaptacao, adaptacao_df_tabela_pintada
 
 
-def gerar_grafico_pau_de_sebo_impressao():
+def gerar_grafico_pau_de_sebo_impressao(detalhes_tripulantes_df,
+                                        meta_pilotos_df,
+                                        dados_pessoais_df):
 
     pau_de_sebo_df = pau_de_sebo.pau_de_sebo(detalhes_tripulantes_df=detalhes_tripulantes_df,
                                              meta_pilotos_df=meta_pilotos_df,
@@ -357,7 +352,12 @@ def gerar_grafico_pau_de_sebo_impressao():
     return grafico_pau_de_sebo, pau_de_sebo_dados
 
 
-def gerar_grafico_demais_funcoes_impressao(funcao, funcoes_agrupadas, lista_funcoes_alunos):
+def gerar_grafico_demais_funcoes_impressao(funcao,
+                                           funcoes_agrupadas,
+                                           lista_funcoes_alunos,
+                                           detalhes_tripulantes_df,
+                                           meta_pilotos_df,
+                                           dados_pessoais_df):
     pau_de_sebo_df = pau_de_sebo.pau_de_sebo(detalhes_tripulantes_df=detalhes_tripulantes_df,
                                              meta_pilotos_df=meta_pilotos_df,
                                              dados_pessoais_df=dados_pessoais_df)[1]
@@ -422,7 +422,12 @@ def gerar_grafico_demais_funcoes_impressao(funcao, funcoes_agrupadas, lista_func
     return (meta_line + pau_de_sebo_chart + rotulo_horas_voadas), pau_de_sebo_filtrado, meta_horas_formatado
 
 
-def gerar_grafico_demais_funcoes(funcao, funcoes_agrupadas, lista_funcoes_alunos):
+def gerar_grafico_demais_funcoes(funcao,
+                                 funcoes_agrupadas,
+                                 lista_funcoes_alunos,
+                                 detalhes_tripulantes_df,
+                                 meta_pilotos_df,
+                                 dados_pessoais_df):
     pau_de_sebo_df = pau_de_sebo.pau_de_sebo(detalhes_tripulantes_df=detalhes_tripulantes_df,
                                              meta_pilotos_df=meta_pilotos_df,
                                              dados_pessoais_df=dados_pessoais_df)[1]
@@ -483,7 +488,10 @@ def gerar_grafico_demais_funcoes(funcao, funcoes_agrupadas, lista_funcoes_alunos
     return (meta_line + pau_de_sebo_chart + rotulo_horas_voadas), pau_de_sebo_filtrado, meta_horas_formatado
 
 
-def gerar_grafico_adaptacao_demais_funcoes(funcao, funcoes_agrupadas):
+def gerar_grafico_adaptacao_demais_funcoes(funcao,
+                                           funcoes_agrupadas,
+                                           detalhes_tripulantes_df,
+                                           dados_pessoais_df):
     adaptacao_tripulantes_df = adaptacao.gerar_adaptacao(detalhes_tripulantes_df=detalhes_tripulantes_df,
                                                          dados_pessoais_df=dados_pessoais_df)[1]
 
@@ -552,7 +560,10 @@ def gerar_grafico_adaptacao_demais_funcoes(funcao, funcoes_agrupadas):
     return (adaptacao_chart_max_sem_voar + adaptacao_tripulantes_chart + rotulo_dias_restantes),\
         adaptacao_df_tabela_tripulantes_pintada, adaptacao_df_tabela_tripulantes
 
-def gerar_grafico_esforco_aereo_impressao(aeronave, grupo):
+
+def gerar_grafico_esforco_aereo_impressao(aeronave,
+                                          grupo,
+                                          esforco_aereo_df):
     esforco_aereo_data = esforco_aereo.tratando_dados_esforco(esforco_aereo_df)
     esforco_aereo_data = esforco_aereo_data.rename(columns={'saldo_horas_minutos': 'Saldo de Horas',
                                                             'horas_gastas_minutos': 'Horas voadas'})
@@ -627,4 +638,4 @@ def gerar_grafico_esforco_aereo_impressao(aeronave, grupo):
                             alt.value('#005202')),
     )
 
-    return (esforco_chart + rotulo_horas_alocadas + rotulo_horas_voadas)
+    return esforco_chart + rotulo_horas_alocadas + rotulo_horas_voadas

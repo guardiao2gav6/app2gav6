@@ -17,7 +17,9 @@ esforco_aereo_df = dados.get_esforco_aereo()
 
 adaptacao_df = adaptacao.gerar_adaptacao(detalhes_tripulantes_df=detalhes_tripulantes_df,
                                          dados_pessoais_df=dados_pessoais_df)[0]
-pau_de_sebo_df = gerador_de_graficos_tabelas.gerar_grafico_pau_de_sebo()[1]
+pau_de_sebo_df = gerador_de_graficos_tabelas.gerar_grafico_pau_de_sebo(detalhes_tripulantes_df=detalhes_tripulantes_df,
+                                                                       meta_pilotos_df=meta_pilotos_df,
+                                                                       dados_pessoais_df=dados_pessoais_df)[1]
 pau_de_sebo_df = pau_de_sebo_df.reset_index()
 
 
