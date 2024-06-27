@@ -3,9 +3,17 @@ from pptx.util import Inches
 import io
 import base64
 import gerador_de_graficos_tabelas
-from PIL import Image
-import streamlit as st
-import esforco_aereo
+from dados_gsheets import Dados
+
+
+# Carregando dados da página
+dados = Dados()
+detalhes_tripulantes_df = dados.generate_detalhes_tripulantes_df()
+meta_pilotos_df = dados.generate_meta_pilotos_df()
+dados_pessoais_df = dados.get_dados_pessoais()
+descidas_df = dados.get_descidas()
+aeronaves_df = dados.get_aeronaves()
+esforco_aereo_df = dados.get_esforco_aereo()
 
 
 # Função para gerar o gráfico com Altair e salvar como PNG em memória
@@ -23,6 +31,7 @@ def generate_chart_image(chart):
     png_output.seek(0)
 
     return png_output
+
 
 def generate_esforco_aereo_chart_image(chart):
     # Exportar o gráfico para PNG usando a API Vega
@@ -42,8 +51,15 @@ def generate_esforco_aereo_chart_image(chart):
 
 def generate_charts_dict():
 
-    pau_de_sebo_chart = gerador_de_graficos_tabelas.gerar_grafico_pau_de_sebo_impressao()[0]
-    adaptacao_chart = gerador_de_graficos_tabelas.gerar_grafico_adaptacao_impressao()[0]
+    pau_de_sebo_chart = gerador_de_graficos_tabelas.gerar_grafico_pau_de_sebo_impressao(
+        detalhes_tripulantes_df=detalhes_tripulantes_df,
+        meta_pilotos_df=meta_pilotos_df,
+        dados_pessoais_df=dados_pessoais_df)[0]
+
+    adaptacao_chart = gerador_de_graficos_tabelas.gerar_grafico_adaptacao_impressao(
+        detalhes_tripulantes_df=detalhes_tripulantes_df,
+        dados_pessoais_df=dados_pessoais_df
+    )[0]
 
     funcoes_agrupadas = {'Mecânicos': ['AC', 'MC', 'IC'],
                          'Chefe Controlador': ['AB-R', 'CC-R', 'IB-R'],
@@ -61,35 +77,98 @@ def generate_charts_dict():
         "Pau de Sebo - PIL": generate_chart_image(pau_de_sebo_chart),
         "Adaptação - PIL": generate_chart_image(adaptacao_chart),
         'Pau de Sebo - OFICIAIS': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes_impressao(
-            'Oficiais', funcoes_agrupadas, lista_funcoes_alunos)[0]),
+            funcao='Oficiais',
+            funcoes_agrupadas=funcoes_agrupadas,
+            lista_funcoes_alunos=lista_funcoes_alunos,
+            detalhes_tripulantes_df=detalhes_tripulantes_df,
+            meta_pilotos_df=meta_pilotos_df,
+            dados_pessoais_df=dados_pessoais_df)[0]),
         'Pau de Sebo - CC': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes_impressao(
-            'Chefe Controlador', funcoes_agrupadas, lista_funcoes_alunos)[0]),
+            funcao='Chefe Controlador',
+            funcoes_agrupadas=funcoes_agrupadas,
+            lista_funcoes_alunos=lista_funcoes_alunos,
+            detalhes_tripulantes_df=detalhes_tripulantes_df,
+            meta_pilotos_df=meta_pilotos_df,
+            dados_pessoais_df=dados_pessoais_df)[0]),
         'Pau de Sebo - COTAT': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes_impressao(
-            'COTAT', funcoes_agrupadas, lista_funcoes_alunos)[0]),
+            funcao='COTAT',
+            funcoes_agrupadas=funcoes_agrupadas,
+            lista_funcoes_alunos=lista_funcoes_alunos,
+            detalhes_tripulantes_df=detalhes_tripulantes_df,
+            meta_pilotos_df=meta_pilotos_df,
+            dados_pessoais_df=dados_pessoais_df)[0]),
         'Pau de Sebo - MC': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes_impressao(
-            'Mecânicos', funcoes_agrupadas, lista_funcoes_alunos)[0]),
+            funcao='Mecânicos',
+            funcoes_agrupadas=funcoes_agrupadas,
+            lista_funcoes_alunos=lista_funcoes_alunos,
+            detalhes_tripulantes_df=detalhes_tripulantes_df,
+            meta_pilotos_df=meta_pilotos_df,
+            dados_pessoais_df=dados_pessoais_df)[0]),
         'Pau de Sebo - COAM': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes_impressao(
-            'COAM', funcoes_agrupadas, lista_funcoes_alunos)[0]),
+            funcao='COAM',
+            funcoes_agrupadas=funcoes_agrupadas,
+            lista_funcoes_alunos=lista_funcoes_alunos,
+            detalhes_tripulantes_df=detalhes_tripulantes_df,
+            meta_pilotos_df=meta_pilotos_df,
+            dados_pessoais_df=dados_pessoais_df)[0]),
         'Pau de Sebo - O1': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes_impressao(
-            'O1', funcoes_agrupadas, lista_funcoes_alunos)[0]),
+            funcao='O1',
+            funcoes_agrupadas=funcoes_agrupadas,
+            lista_funcoes_alunos=lista_funcoes_alunos,
+            detalhes_tripulantes_df=detalhes_tripulantes_df,
+            meta_pilotos_df=meta_pilotos_df,
+            dados_pessoais_df=dados_pessoais_df)[0]),
         'Pau de Sebo - O3': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes_impressao(
-            'O3', funcoes_agrupadas, lista_funcoes_alunos)[0]),
+            funcao='O3',
+            funcoes_agrupadas=funcoes_agrupadas,
+            lista_funcoes_alunos=lista_funcoes_alunos,
+            detalhes_tripulantes_df=detalhes_tripulantes_df,
+            meta_pilotos_df=meta_pilotos_df,
+            dados_pessoais_df=dados_pessoais_df)[0]),
         'Pau de Sebo - MA-E': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes_impressao(
-            'MA-E', funcoes_agrupadas, lista_funcoes_alunos)[0]),
+            funcao='MA-E',
+            funcoes_agrupadas=funcoes_agrupadas,
+            lista_funcoes_alunos=lista_funcoes_alunos,
+            detalhes_tripulantes_df=detalhes_tripulantes_df,
+            meta_pilotos_df=meta_pilotos_df,
+            dados_pessoais_df=dados_pessoais_df)[0]),
         'Pau de Sebo - MA-R': generate_chart_image(gerador_de_graficos_tabelas.gerar_grafico_demais_funcoes_impressao(
-            'MA-R', funcoes_agrupadas, lista_funcoes_alunos)[0]),
+            funcao='MA-R',
+            funcoes_agrupadas=funcoes_agrupadas,
+            lista_funcoes_alunos=lista_funcoes_alunos,
+            detalhes_tripulantes_df=detalhes_tripulantes_df,
+            meta_pilotos_df=meta_pilotos_df,
+            dados_pessoais_df=dados_pessoais_df)[0]),
         'Esforço Aéreo - E99 COMPREP': generate_esforco_aereo_chart_image(
-            gerador_de_graficos_tabelas.gerar_grafico_esforco_aereo_impressao('E-99', 'COMPREP')),
+            gerador_de_graficos_tabelas.gerar_grafico_esforco_aereo_impressao(
+                aeronave='E-99',
+                grupo='COMPREP',
+                esforco_aereo_df=esforco_aereo_df)),
         'Esforço Aéreo - E99 COMAE': generate_esforco_aereo_chart_image(
-            gerador_de_graficos_tabelas.gerar_grafico_esforco_aereo_impressao('E-99', 'COMAE')),
+            gerador_de_graficos_tabelas.gerar_grafico_esforco_aereo_impressao(
+                aeronave='E-99',
+                grupo='COMAE',
+                esforco_aereo_df=esforco_aereo_df)),
         'Esforço Aéreo - E99 DCTA': generate_esforco_aereo_chart_image(
-            gerador_de_graficos_tabelas.gerar_grafico_esforco_aereo_impressao('E-99', 'DCTA')),
+            gerador_de_graficos_tabelas.gerar_grafico_esforco_aereo_impressao(
+                aeronave='E-99',
+                grupo='DCTA',
+                esforco_aereo_df=esforco_aereo_df)),
         'Esforço Aéreo - R99 COMPREP': generate_esforco_aereo_chart_image(
-            gerador_de_graficos_tabelas.gerar_grafico_esforco_aereo_impressao('R-99', 'COMPREP')),
+            gerador_de_graficos_tabelas.gerar_grafico_esforco_aereo_impressao(
+                aeronave='R-99',
+                grupo='COMPREP',
+                esforco_aereo_df=esforco_aereo_df)),
         'Esforço Aéreo - R99 COMAE': generate_esforco_aereo_chart_image(
-            gerador_de_graficos_tabelas.gerar_grafico_esforco_aereo_impressao('R-99', 'COMAE')),
+            gerador_de_graficos_tabelas.gerar_grafico_esforco_aereo_impressao(
+                aeronave='R-99',
+                grupo='COMAE',
+                esforco_aereo_df=esforco_aereo_df)),
         'Esforço Aéreo - R99 DCTA': generate_esforco_aereo_chart_image(
-            gerador_de_graficos_tabelas.gerar_grafico_esforco_aereo_impressao('R-99', 'DCTA')),
+            gerador_de_graficos_tabelas.gerar_grafico_esforco_aereo_impressao(
+                aeronave='R-99',
+                grupo='DCTA',
+                esforco_aereo_df=esforco_aereo_df)),
     }
 
 

@@ -1,10 +1,10 @@
 import pandas as pd
+import streamlit as st
 
 
 def funcoes_tripulantes(dados_pessoais):
     funcoes_dos_tripulantes = dados_pessoais.loc[(dados_pessoais['funcoes_a_bordo'] != 'NIL') &
                                                  (dados_pessoais['sigla_funcao'] != 'NIL')]
-
     trigramas_temp = []
     funcao_a_bordo_temp = []
     for i, row in funcoes_dos_tripulantes.iterrows():

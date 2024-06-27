@@ -518,12 +518,15 @@ def gerar_grafico_adaptacao_demais_funcoes(funcao,
 
     adaptacao_tripulantes_base = alt.Chart(adaptacao_tripulantes_df)
     adaptacao_tripulantes_chart = adaptacao_tripulantes_base.mark_bar(
-        size=20
+        size=25
     ).encode(
         x=alt.X('tripulante:N', sort=alt.EncodingSortField(field='dias_para_desadaptar', op='sum', order='descending'),
-                axis=alt.Axis(title='', labelAngle=0, labelFontSize=16, ticks=False,
+                axis=alt.Axis(title='',
+                              labelAngle=0,
+                              labelFontSize=16,
+                              ticks=False,
                               labelAlign='center', grid=False)),
-        y=alt.Y('dias_sem_voar:Q', axis=alt.Axis(labels=False, title='', grid=False)),
+        y=alt.Y('dias_sem_voar:Q', axis=alt.Axis(labels=False, title='')),
         color=alt.Color('funcao_a_bordo:N',
                         legend=alt.Legend(orient='top',
                                           title='Qualificação Operacional'),
