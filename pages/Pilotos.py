@@ -50,6 +50,7 @@ filtro_cesta_basica_trimestre = st.selectbox(label='Trimestre',
                                                                                                                 4]],
                                              index=trimestre_atual - 1)
 numero_trimestre_selecionado = int(filtro_cesta_basica_trimestre.split(' ')[0][0])
+
 cesta_basica_trimestre = cesta_basica.gerar_cesta_basica(trimestre=numero_trimestre_selecionado,
                                                          detalhes_tripulantes_df=detalhes_tripulantes_df,
                                                          descidas_df=descidas_df,

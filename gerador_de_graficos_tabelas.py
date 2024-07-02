@@ -431,6 +431,7 @@ def gerar_grafico_demais_funcoes(funcao,
     pau_de_sebo_df = pau_de_sebo.pau_de_sebo(detalhes_tripulantes_df=detalhes_tripulantes_df,
                                              meta_pilotos_df=meta_pilotos_df,
                                              dados_pessoais_df=dados_pessoais_df)[1]
+    import streamlit as st
 
     if funcao == 'Oficiais':
         pau_de_sebo_filtrado = pau_de_sebo_df.loc[(pau_de_sebo_df['funcao_a_bordo'].isin(
@@ -518,7 +519,7 @@ def gerar_grafico_adaptacao_demais_funcoes(funcao,
 
     adaptacao_tripulantes_base = alt.Chart(adaptacao_tripulantes_df)
     adaptacao_tripulantes_chart = adaptacao_tripulantes_base.mark_bar(
-        size=25
+        size=20
     ).encode(
         x=alt.X('tripulante:N', sort=alt.EncodingSortField(field='dias_para_desadaptar', op='sum', order='descending'),
                 axis=alt.Axis(title='',

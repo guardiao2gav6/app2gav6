@@ -1,6 +1,7 @@
 import pandas as pd
 import time_handler
 import funcoes_tripulantes
+import streamlit as st
 
 
 def pau_de_sebo(detalhes_tripulantes_df,
@@ -12,7 +13,10 @@ def pau_de_sebo(detalhes_tripulantes_df,
     pau_sebo_tripulantes = detalhes_tripulantes_df.groupby(
         by=['tripulante',
             'funcao_a_bordo'])[['tempo_de_voo_minutos']].sum().reset_index()
-    pau_sebo_tripulantes = pd.concat([pau_sebo_tripulantes, tripulantes], ignore_index=True)
+    pau_sebo_tripulantes = tripulantes.merge(right=pau_sebo_tripulantes, how='left', on='tripulante').fillna(0)
+    pau_sebo_tripulantes = pau_sebo_tripulantes.drop(columns='funcao_a_bordo_y')
+    pau_sebo_tripulantes = pau_sebo_tripulantes.rename(columns={'funcao_a_bordo_x': 'funcao_a_bordo'})
+    # pau_sebo_tripulantes = pd.concat([pau_sebo_tripulantes, tripulantes], ignore_index=True)
     pau_sebo_tripulantes = pau_sebo_tripulantes.sort_values('tempo_de_voo_minutos',
                                                             ascending=False).drop_duplicates(subset=['tripulante',
                                                                                                      'funcao_a_bordo'])
