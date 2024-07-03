@@ -1,5 +1,9 @@
 import pandas as pd
 import datetime
+
+import streamlit as st
+
+
 import funcoes_tripulantes
 
 
@@ -53,7 +57,6 @@ def gerar_adaptacao(detalhes_tripulantes_df,
     ultimos_voos_pilotos['data_voo'] = pd.to_datetime(ultimos_voos_pilotos['data_voo'], format='%d/%m/%Y')
 
     adaptacao_pilotos = tripulantes.loc[tripulantes['funcao_a_bordo'].isin(lista_funcoes_pilotos)].reset_index()
-
     adaptacao_pilotos = adaptacao_pilotos.rename(columns={'trigrama': 'tripulante'})
 
     adaptacao_pilotos['dias_para_desadaptar'] = adaptacao_pilotos['funcao_a_bordo'].map(
@@ -61,7 +64,7 @@ def gerar_adaptacao(detalhes_tripulantes_df,
 
     adaptacao_pilotos = adaptacao_pilotos.merge(right=ultimos_voos_pilotos, how='left', on='tripulante')
 
-    adaptacao_pilotos = adaptacao_pilotos.fillna(pd.to_datetime('31/12/2023', format='%d/%m/%Y'))
+    adaptacao_pilotos = adaptacao_pilotos.dropna()
 
     adaptacao_pilotos['voar_ate'] = adaptacao_pilotos['data_voo'] + pd.to_timedelta(
         adaptacao_pilotos['dias_para_desadaptar'], unit='D')
@@ -94,8 +97,7 @@ def gerar_adaptacao(detalhes_tripulantes_df,
     adaptacao_tripulantes_df = adaptacao_tripulantes_df.merge(right=ultimos_voo_tripulantes,
                                                               how='left',
                                                               on='tripulante')
-    adaptacao_tripulantes_df = adaptacao_tripulantes_df.fillna(pd.to_datetime('31/12/2023', format='%d/%m/%Y'))
-
+    adaptacao_tripulantes_df = adaptacao_tripulantes_df.dropna()
     adaptacao_tripulantes_df['voar_ate'] = adaptacao_tripulantes_df['data_voo'] + pd.to_timedelta(
         adaptacao_tripulantes_df['dias_para_desadaptar'], unit='D')
 

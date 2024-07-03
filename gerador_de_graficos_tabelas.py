@@ -431,7 +431,7 @@ def gerar_grafico_demais_funcoes(funcao,
     pau_de_sebo_df = pau_de_sebo.pau_de_sebo(detalhes_tripulantes_df=detalhes_tripulantes_df,
                                              meta_pilotos_df=meta_pilotos_df,
                                              dados_pessoais_df=dados_pessoais_df)[1]
-    import streamlit as st
+
 
     if funcao == 'Oficiais':
         pau_de_sebo_filtrado = pau_de_sebo_df.loc[(pau_de_sebo_df['funcao_a_bordo'].isin(
