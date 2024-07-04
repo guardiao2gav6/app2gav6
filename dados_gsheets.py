@@ -74,6 +74,7 @@ class Dados:
         id_meta_pilotos = "1746517579"
         meta_pilotos_df = self.connect_to_worksheet(id_worksheet=id_meta_pilotos).drop(columns=['meta_comprep',
                                                                                                 'meta_esquadrao'])
+        meta_pilotos_df = meta_pilotos_df.dropna()
         meta_pilotos_df['meta_comprep_minutos'] = meta_pilotos_df['meta_comprep_minutos'] * 1000
         meta_pilotos_df['meta_esquadrao_minutos'] = meta_pilotos_df['meta_esquadrao_minutos'] * 1000
         meta_pilotos_df['meta_comprep'] = meta_pilotos_df['meta_comprep_minutos'].map(
