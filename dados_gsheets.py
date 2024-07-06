@@ -248,3 +248,32 @@ class Dados:
                                      ttl=self.ttl,
                                      worksheet=id_descidas)
         return descidas_df
+
+
+class DadosMissoesFora:
+    url = r"https://docs.google.com/spreadsheets/d/1PzrB5qZBE3RLkgADivAQKDI5aclwHJYvKt5vaKeI1-c/edit?usp=sharing"
+    conn = st.connection("gsheets", type=GSheetsConnection)
+    ttl = 60 * 5
+
+    def __init__(self):
+        pass
+
+    def connect_to_worksheet(self, id_worksheet):
+        try:
+            worksheet = self.conn.read(spreadsheet=self.url,
+                                       ttl=self.ttl,
+                                       worksheet=id_worksheet)
+            return worksheet
+        except URLError:
+            return st.error("Verifique sua conexão com a internet")
+
+    def get_comissionamentos(self):
+        id_comiss = "1832401338"
+        comiss_df = self.connect_to_worksheet(id_worksheet=id_comiss)
+        comiss_df = comiss_df.loc[:, ~comiss_df.columns.str.contains('^Unnamed')]
+        comiss_df = comiss_df.dropna(subset=['NUMERO DA OS'])
+        comiss_df = comiss_df.rename(columns={"ATIVO (SIM) / INATIVO (NÃO) / PREVISTO (PREV)": 'Status'})
+
+        return comiss_df
+
+

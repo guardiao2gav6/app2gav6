@@ -71,7 +71,6 @@ pau_de_sebo_demais_funcoes_chart = gerador_de_graficos_tabelas.gerar_grafico_dem
     funcoes_agrupadas=funcoes_agrupadas,
     lista_funcoes_alunos=lista_funcoes_alunos,
     detalhes_tripulantes_df=detalhes_tripulantes_df,
-    meta_pilotos_df=meta_pilotos_df,
     dados_pessoais_df=dados_pessoais_df)
 
 if st.checkbox(label='Mostrar Dados'):

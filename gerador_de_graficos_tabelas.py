@@ -39,9 +39,9 @@ def gerar_grafico_pau_de_sebo(detalhes_tripulantes_df,
                               meta_pilotos_df,
                               dados_pessoais_df):
 
-    pau_de_sebo_df = pau_de_sebo.pau_de_sebo(detalhes_tripulantes_df=detalhes_tripulantes_df,
-                                             meta_pilotos_df=meta_pilotos_df,
-                                             dados_pessoais_df=dados_pessoais_df)[0]
+    pau_de_sebo_df = pau_de_sebo.pau_de_sebo_pilotos(detalhes_tripulantes_df=detalhes_tripulantes_df,
+                                                     meta_pilotos_df=meta_pilotos_df,
+                                                     dados_pessoais_df=dados_pessoais_df)
     base = alt.Chart(pau_de_sebo_df).transform_fold(
         ['LSP', 'RSP'],
         as_=['Categoria', 'value']
@@ -104,8 +104,7 @@ def gerar_grafico_pau_de_sebo(detalhes_tripulantes_df,
     )
 
     pau_de_sebo_dados = pau_de_sebo_df.drop(columns=['LSP',
-                                                     'RSP',
-                                                     'total_fake']).set_index('tripulante')
+                                                     'RSP']).set_index('tripulante')
 
     grafico_pau_de_sebo = metas + graph + texto
     return grafico_pau_de_sebo, pau_de_sebo_dados
@@ -278,9 +277,9 @@ def gerar_grafico_pau_de_sebo_impressao(detalhes_tripulantes_df,
                                         meta_pilotos_df,
                                         dados_pessoais_df):
 
-    pau_de_sebo_df = pau_de_sebo.pau_de_sebo(detalhes_tripulantes_df=detalhes_tripulantes_df,
-                                             meta_pilotos_df=meta_pilotos_df,
-                                             dados_pessoais_df=dados_pessoais_df)[0]
+    pau_de_sebo_df = pau_de_sebo.pau_de_sebo_pilotos(detalhes_tripulantes_df=detalhes_tripulantes_df,
+                                                     meta_pilotos_df=meta_pilotos_df,
+                                                     dados_pessoais_df=dados_pessoais_df)
     base = alt.Chart(pau_de_sebo_df).transform_fold(
         ['LSP', 'RSP'],
         as_=['Categoria', 'value']
@@ -345,8 +344,7 @@ def gerar_grafico_pau_de_sebo_impressao(detalhes_tripulantes_df,
     )
 
     pau_de_sebo_dados = pau_de_sebo_df.drop(columns=['LSP',
-                                                     'RSP',
-                                                     'total_fake']).set_index('tripulante')
+                                                     'RSP']).set_index('tripulante')
 
     grafico_pau_de_sebo = metas + graph + texto
     return grafico_pau_de_sebo, pau_de_sebo_dados
@@ -356,11 +354,9 @@ def gerar_grafico_demais_funcoes_impressao(funcao,
                                            funcoes_agrupadas,
                                            lista_funcoes_alunos,
                                            detalhes_tripulantes_df,
-                                           meta_pilotos_df,
                                            dados_pessoais_df):
-    pau_de_sebo_df = pau_de_sebo.pau_de_sebo(detalhes_tripulantes_df=detalhes_tripulantes_df,
-                                             meta_pilotos_df=meta_pilotos_df,
-                                             dados_pessoais_df=dados_pessoais_df)[1]
+    pau_de_sebo_df = pau_de_sebo.pau_de_sebo_demais_tripulantes(detalhes_tripulantes_df=detalhes_tripulantes_df,
+                                                                dados_pessoais_df=dados_pessoais_df)
 
     if funcao == 'Oficiais':
         pau_de_sebo_filtrado = pau_de_sebo_df.loc[(pau_de_sebo_df['funcao_a_bordo'].isin(
@@ -426,12 +422,9 @@ def gerar_grafico_demais_funcoes(funcao,
                                  funcoes_agrupadas,
                                  lista_funcoes_alunos,
                                  detalhes_tripulantes_df,
-                                 meta_pilotos_df,
                                  dados_pessoais_df):
-    pau_de_sebo_df = pau_de_sebo.pau_de_sebo(detalhes_tripulantes_df=detalhes_tripulantes_df,
-                                             meta_pilotos_df=meta_pilotos_df,
-                                             dados_pessoais_df=dados_pessoais_df)[1]
-
+    pau_de_sebo_df = pau_de_sebo.pau_de_sebo_demais_tripulantes(detalhes_tripulantes_df=detalhes_tripulantes_df,
+                                                                dados_pessoais_df=dados_pessoais_df)
 
     if funcao == 'Oficiais':
         pau_de_sebo_filtrado = pau_de_sebo_df.loc[(pau_de_sebo_df['funcao_a_bordo'].isin(
