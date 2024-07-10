@@ -7,8 +7,9 @@ def pau_de_sebo_demais_tripulantes(detalhes_tripulantes_df,
                                    dados_pessoais_df):
     tripulantes = funcoes_tripulantes.funcoes_tripulantes(dados_pessoais_df)
     tripulantes.rename(columns={'trigrama': 'tripulante'}, inplace=True)
+    pau_sebo_tripulantes = detalhes_tripulantes_df.loc[detalhes_tripulantes_df['aeronave'] != 'SIM C-99']
 
-    pau_sebo_tripulantes = detalhes_tripulantes_df.groupby(
+    pau_sebo_tripulantes = pau_sebo_tripulantes.groupby(
         by=['tripulante',
             'funcao_a_bordo'])[['tempo_de_voo_minutos']].sum().reset_index()
 
@@ -35,10 +36,11 @@ def pau_de_sebo_pilotos(detalhes_tripulantes_df,
     pilotos_unicos = pilotos_unicos.drop(columns='funcao_a_bordo')
 
     # Filtra apenas militares que voaram com as funções de IN, AL, 1P, 2P.
-    pau_sebo_pilotos_parcial = detalhes_tripulantes_df.loc[detalhes_tripulantes_df['funcao_a_bordo'].isin(['IN',
-                                                                                                           'AL',
-                                                                                                           '1P',
-                                                                                                           '2P'])]
+    pau_sebo_pilotos_parcial = detalhes_tripulantes_df.loc[(detalhes_tripulantes_df['funcao_a_bordo'].isin(['IN',
+                                                                                                            'AL',
+                                                                                                            '1P',
+                                                                                                            '2P'])) &
+                                                           (detalhes_tripulantes_df['aeronave'] != 'SIM C-99')]
     pau_sebo_pilotos_parcial = pau_sebo_pilotos_parcial.groupby(
         by=['tripulante',
             'posicao_a_bordo'])[['tempo_de_voo_minutos']].sum().reset_index()
