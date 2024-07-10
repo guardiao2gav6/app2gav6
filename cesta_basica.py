@@ -33,15 +33,17 @@ def gerar_cesta_basica(trimestre,
     for i in range(1, 13):
         if (i + 2) // 3 == trimestre:
             lista_meses_do_trimestre.append(i)
-    detalhes_trip = detalhes_tripulantes_df
+    detalhes_trip = detalhes_tripulantes_df.copy()
     lista_trigramas = dados_pessoais_df.loc[dados_pessoais_df['sigla_funcao'].str.contains('PIL',
                                                                                            case=False), 'trigrama']
-    detalhes_trip_filtrada = detalhes_trip.loc[(detalhes_trip['funcao_a_bordo'] == '1P') |
-                                               (detalhes_trip['funcao_a_bordo'] == 'IN') |
+    detalhes_trip_filtrada = detalhes_trip.loc[((detalhes_trip['funcao_a_bordo'].isin(['1P', 'IN'])) |
                                                ((detalhes_trip['funcao_a_bordo'] == 'AL') &
                                                (detalhes_trip['posicao_a_bordo'] == 'LSP')) |
                                                ((detalhes_trip['tempo_noturno'] != '00:00') &
-                                                (detalhes_trip['funcao_a_bordo'].isin(['1P', '2P', 'AL', 'IN'])))]
+                                                (detalhes_trip['funcao_a_bordo'].isin(['1P', '2P', 'AL', 'IN'])))) &
+                                               (detalhes_trip['aeronave'] != 'SIM C-99')]
+
+    st.dataframe(detalhes_trip_filtrada)
 
     detalhes_trip_filtrada.loc[:, 'mes_voo'] = pd.to_datetime(detalhes_trip_filtrada['data_voo'],
                                                               format="%d/%m/%Y").dt.month
@@ -76,7 +78,7 @@ def gerar_cesta_basica(trimestre,
     quantidades = []
     tipo_procedimentos = []
 
-    lista_id_voos = detalhes_tripulantes_df['IdVoo'].unique()
+    lista_id_voos = detalhes_trip['IdVoo'].unique()
     voos_sem_descida = descidas_df[~descidas_df['IdVoo'].isin(lista_id_voos)]
 
     for i, row_tripulantes in detalhes_trip_filtrada.iterrows():
