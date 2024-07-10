@@ -4,6 +4,7 @@ import adaptacao
 import time_handler
 import pandas as pd
 import esforco_aereo
+import streamlit as st
 
 
 def analisar_status_adaptacao(dias_restantes):
@@ -553,6 +554,8 @@ def gerar_grafico_adaptacao_demais_funcoes(funcao,
         text='label_dias_restantes:N',
         tooltip=alt.value(None)
     )
+
+
 
     return (adaptacao_chart_max_sem_voar + adaptacao_tripulantes_chart + rotulo_dias_restantes),\
         adaptacao_df_tabela_tripulantes_pintada, adaptacao_df_tabela_tripulantes

@@ -51,6 +51,7 @@ class Dados:
         registros_de_voos_df = self.generate_registros_voos_df()
 
         df1 = registros_de_voos_df[['IdVoo',
+                                    'aeronave',
                                     'tempo_de_voo_minutos',
                                     'tempo_noturno',
                                     'tempo_ifr',

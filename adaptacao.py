@@ -1,9 +1,5 @@
 import pandas as pd
 import datetime
-
-import streamlit as st
-
-
 import funcoes_tripulantes
 
 
@@ -49,9 +45,10 @@ def gerar_adaptacao(detalhes_tripulantes_df,
     lista_funcoes_pilotos = ['AL', 'IN', '2P', '1P']
     tripulantes = funcoes_tripulantes.funcoes_tripulantes(dados_pessoais_df)
 
-    ultimos_voos_pilotos = detalhes_tripulantes_df.loc[detalhes_tripulantes_df['funcao_a_bordo'].isin(
-        lista_funcoes_pilotos), ['tripulante', 'funcao_a_bordo', 'data_voo']]
-
+    ultimos_voos_pilotos = detalhes_tripulantes_df.loc[(detalhes_tripulantes_df['funcao_a_bordo'].isin(
+        lista_funcoes_pilotos)) & (detalhes_tripulantes_df['aeronave'] != 'SIM C-99'), ['tripulante',
+                                                                                        'funcao_a_bordo',
+                                                                                        'data_voo']]
     ultimos_voos_pilotos = ultimos_voos_pilotos.groupby(by='tripulante')[['data_voo']].max().reset_index()
 
     ultimos_voos_pilotos['data_voo'] = pd.to_datetime(ultimos_voos_pilotos['data_voo'], format='%d/%m/%Y')
