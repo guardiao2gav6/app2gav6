@@ -1,5 +1,4 @@
 import pandas as pd
-import streamlit as st
 
 
 def pintar_celulas_pr_np(val):
@@ -42,8 +41,6 @@ def gerar_cesta_basica(trimestre,
                                                ((detalhes_trip['tempo_noturno'] != '00:00') &
                                                 (detalhes_trip['funcao_a_bordo'].isin(['1P', '2P', 'AL', 'IN'])))) &
                                                (detalhes_trip['aeronave'] != 'SIM C-99')]
-
-    st.dataframe(detalhes_trip_filtrada)
 
     detalhes_trip_filtrada.loc[:, 'mes_voo'] = pd.to_datetime(detalhes_trip_filtrada['data_voo'],
                                                               format="%d/%m/%Y").dt.month
