@@ -59,6 +59,8 @@ class Dados:
                                     'arremetidas',
                                     'trafego_visual']]
 
+        df1['tempo_noturno_minutos'] = df1['tempo_noturno'].map(time_handler.transform_duration_string_to_minutes)
+
         detalhes_tripulantes_df = detalhes_tripulantes_df.merge(df1, how='left')
         detalhes_tripulantes_df['data_voo'] = pd.to_datetime(detalhes_tripulantes_df['data_voo'])
         detalhes_tripulantes_df = detalhes_tripulantes_df[~detalhes_tripulantes_df['tripulante'].isin(['FIC',

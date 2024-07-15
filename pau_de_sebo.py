@@ -1,10 +1,12 @@
 import pandas as pd
 import time_handler
 import funcoes_tripulantes
+import streamlit as st
 
 
 def pau_de_sebo_demais_tripulantes(detalhes_tripulantes_df,
                                    dados_pessoais_df):
+
     tripulantes = funcoes_tripulantes.funcoes_tripulantes(dados_pessoais_df)
     tripulantes.rename(columns={'trigrama': 'tripulante'}, inplace=True)
     pau_sebo_tripulantes = detalhes_tripulantes_df.loc[detalhes_tripulantes_df['aeronave'] != 'SIM C-99']
@@ -57,4 +59,5 @@ def pau_de_sebo_pilotos(detalhes_tripulantes_df,
     pau_sebo_pilotos['Total'] = pau_sebo_pilotos['Total_minutos'].map(time_handler.transform_minutes_to_duration_string)
     pau_sebo_pilotos = pau_sebo_pilotos.sort_values('Total', ascending=False)
     pau_sebo_pilotos = pau_sebo_pilotos.merge(right=meta_pilotos_df, how='left', on='tripulante')
+
     return pau_sebo_pilotos
