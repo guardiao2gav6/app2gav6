@@ -98,8 +98,7 @@ class Dados:
                                                                                    'RND',
                                                                                    'DGO',
                                                                                    'BOS',
-                                                                                   'LET',
-                                                                                   'RPH'])]
+                                                                                   'LET'])]
         return dados_pessoais_df
 
     def get_opo_df(self):
