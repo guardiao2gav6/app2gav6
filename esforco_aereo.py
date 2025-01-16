@@ -1,6 +1,6 @@
 import altair as alt
 import time_handler
-
+import streamlit as st
 
 def gerar_posicao_texto(row):
     if row['horas_alocadas_minutos'] > 0 and row['horas_gastas_minutos'] <= row['horas_alocadas_minutos']:
@@ -16,10 +16,14 @@ def tratando_dados_esforco(esforco_aereo_data):
     horas_gastas_sesqae_sop = esforco_aereo_data_new.loc[(esforco_aereo_data_new['esforco'] == 'SESQAE (*)'),
                                                          ['aeronave', 'horas_gastas_minutos']]
 
-    horas_gastas_sesqae_sop_r99 = horas_gastas_sesqae_sop.loc[horas_gastas_sesqae_sop['aeronave'] == 'R-99',
-                                                              'horas_gastas_minutos'].iloc[0]
-    horas_gastas_sesqae_sop_e99 = horas_gastas_sesqae_sop.loc[horas_gastas_sesqae_sop['aeronave'] == 'E-99',
-                                                              'horas_gastas_minutos'].iloc[0]
+    try:
+        horas_gastas_sesqae_sop_r99 = horas_gastas_sesqae_sop.loc[horas_gastas_sesqae_sop['aeronave'] == 'R-99',
+                                                                  'horas_gastas_minutos'].iloc[0]
+        horas_gastas_sesqae_sop_e99 = horas_gastas_sesqae_sop.loc[horas_gastas_sesqae_sop['aeronave'] == 'E-99',
+                                                                  'horas_gastas_minutos'].iloc[0]
+    except:
+        horas_gastas_sesqae_sop_r99 = 0
+        horas_gastas_sesqae_sop_e99 = 0
 
     esforco_aereo_data_new.loc[(esforco_aereo_data_new['aeronave'] == 'R-99') &
                                (esforco_aereo_data_new['esforco'] == 'SESQAE'), 'horas_gastas_minutos'] += \

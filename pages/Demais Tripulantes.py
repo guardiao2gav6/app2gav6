@@ -2,6 +2,7 @@ import streamlit as st
 import gerador_de_graficos_tabelas
 import altair as alt
 from dados_gsheets import Dados
+import datetime
 
 
 dados = Dados()
@@ -12,6 +13,9 @@ descidas_df = dados.get_descidas()
 aeronaves_df = dados.get_aeronaves()
 esforco_aereo_df = dados.get_esforco_aereo()
 
+
+filtro_data_pau_sebo_tripulantes = st.date_input(label='Início - Término', value=[datetime.date(2025, 1, 1), datetime.date.today()])
+detalhes_tripulantes_df_filtrada = detalhes_tripulantes_df.loc[(detalhes_tripulantes_df['data_voo'].dt.date)>=filtro_data_pau_sebo_tripulantes[0]]
 
 def analisar_status_adaptacao(dias_restantes):
     if dias_restantes > 10:
@@ -70,7 +74,7 @@ pau_de_sebo_demais_funcoes_chart = gerador_de_graficos_tabelas.gerar_grafico_dem
     funcao=filtro_funcoes,
     funcoes_agrupadas=funcoes_agrupadas,
     lista_funcoes_alunos=lista_funcoes_alunos,
-    detalhes_tripulantes_df=detalhes_tripulantes_df,
+    detalhes_tripulantes_df=detalhes_tripulantes_df_filtrada,
     dados_pessoais_df=dados_pessoais_df)
 
 if st.checkbox(label='Mostrar Dados'):
@@ -100,7 +104,7 @@ st.markdown(f'#### Adaptação - {filtro_funcoes}')
 adaptacao_demais_funcoes_chart = gerador_de_graficos_tabelas.gerar_grafico_adaptacao_demais_funcoes(
     funcao=filtro_funcoes,
     funcoes_agrupadas=funcoes_agrupadas,
-    detalhes_tripulantes_df=detalhes_tripulantes_df,
+    detalhes_tripulantes_df=detalhes_tripulantes_df_filtrada,
     dados_pessoais_df=dados_pessoais_df
 )
 

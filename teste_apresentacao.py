@@ -4,7 +4,7 @@ import io
 import base64
 import gerador_de_graficos_tabelas
 from dados_gsheets import Dados
-
+import streamlit as st
 
 # Carregando dados da página
 dados = Dados()
@@ -14,7 +14,6 @@ dados_pessoais_df = dados.get_dados_pessoais()
 descidas_df = dados.get_descidas()
 aeronaves_df = dados.get_aeronaves()
 esforco_aereo_df = dados.get_esforco_aereo()
-
 
 # Função para gerar o gráfico com Altair e salvar como PNG em memória
 def generate_chart_image(chart):

@@ -21,9 +21,9 @@ if st.sidebar.button(label='Gerar Apresentação'):
 
 filtros_cols = st.columns([1, 1, 1, 1, 1])
 with filtros_cols[0]:
-    filtro_datas = st.date_input(label='Início - Término', value=[datetime.date(2024, 1, 1), datetime.date.today()])
+    filtro_datas = st.date_input(label='Início - Término', value=[datetime.date(2025, 1, 1), datetime.date.today()])
 with filtros_cols[1]:
-    filtro_aeronave = st.multiselect(label='Aeronave', options=aeronaves_df['modelo'].unique())
+    filtro_aeronave = st.multiselect(label='Aeronave', options=aeronaves_df['modelo'].unique(), default=['E-99', 'R-99'])
 with filtros_cols[2]:
     filtro_matricula = st.multiselect(label='Matrícula', options=aeronaves_df['Matrícula'].unique())
 with filtros_cols[3]:

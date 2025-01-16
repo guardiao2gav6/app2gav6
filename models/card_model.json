@@ -1,0 +1,773 @@
+{
+  "id": "667ad91a7992b292836863dc",
+  "address": null,
+  "badges": {
+    "attachmentsByType": {
+      "trello": {
+        "board": 0,
+        "card": 0
+      }
+    },
+    "externalSource": null,
+    "location": false,
+    "votes": 0,
+    "viewingMemberVoted": false,
+    "subscribed": false,
+    "attachments": 0,
+    "fogbugz": "",
+    "checkItems": 0,
+    "checkItemsChecked": 0,
+    "checkItemsEarliestDue": null,
+    "comments": 0,
+    "description": true,
+    "due": null,
+    "dueComplete": false,
+    "lastUpdatedByAi": false,
+    "start": null
+  },
+  "checkItemStates": [],
+  "closed": false,
+  "coordinates": null,
+  "creationMethod": null,
+  "creationMethodError": null,
+  "dueComplete": false,
+  "dateLastActivity": "2024-06-30T04:00:12.150Z",
+  "dateViewedByCreator": null,
+  "desc": "**Nome da Missão**: [coloque aqui o nome da missão]\n\n**Local da missão**: [coloque aqui o local da missão. Ex: COMAE, BABV, BAMN, ICEA, COMPREP, BACC, BACO, HFAB, MD]\n\n**Cidade da missão:** Ex: Anápolis - GO\n\n‌\n\n‌\n\n‌\n\n:airplane: inserir as datas",
+  "descData": {
+    "emoji": {
+
+    }
+  },
+  "due": null,
+  "dueReminder": null,
+  "email": "marcosviniciu+2q9jrvau0xmj6rt2mia+32p39cs4vhzv7f9xm8s+1h24nzyvpz@boards.trello.com",
+  "idBoard": "65a56bbe23f31f19425d2a22",
+  "idChecklists": [],
+  "idLabels": [
+    "65dee444733b0a8a25029c47"
+  ],
+  "idList": "65a82cba073c0bfe868521b7",
+  "idMemberCreator": "5e0a70aefab29682c77fc51e",
+  "idMembers": [],
+  "idMembersVoted": [],
+  "idOrganization": "60fdf83abbe0ea1f3714d07b",
+  "idShort": 156,
+  "idAttachmentCover": null,
+  "labels": [
+    {
+      "id": "65dee444733b0a8a25029c47",
+      "idBoard": "65a56bbe23f31f19425d2a22",
+      "name": "AGUARDANDO A SOP",
+      "color": "green",
+      "uses": 0
+    }
+  ],
+  "limits": {
+    "attachments": {
+      "perCard": {
+        "status": "ok",
+        "disableAt": 1000,
+        "warnAt": 800
+      }
+    },
+    "checklists": {
+      "perCard": {
+        "status": "ok",
+        "disableAt": 500,
+        "warnAt": 400
+      }
+    },
+    "stickers": {
+      "perCard": {
+        "status": "ok",
+        "disableAt": 70,
+        "warnAt": 56
+      }
+    }
+  },
+  "locationName": null,
+  "manualCoverAttachment": false,
+  "name": "OS 00XX/2024 - XXX/XXX/XXX",
+  "nodeId": "ari:cloud:trello::card/workspace/60fdf83abbe0ea1f3714d07b/667ad91a7992b292836863dc",
+  "pos": 67584,
+  "shortLink": "lUz21CWk",
+  "shortUrl": "https://trello.com/c/lUz21CWk",
+  "sourceEmail": null,
+  "staticMapUrl": null,
+  "start": null,
+  "subscribed": false,
+  "url": "https://trello.com/c/lUz21CWk/156-os-00xx-2024-xxx-xxx-xxx",
+  "cover": {
+    "idAttachment": null,
+    "color": null,
+    "idUploadedBackground": null,
+    "size": "normal",
+    "brightness": "dark",
+    "idPlugin": null
+  },
+  "isTemplate": true,
+  "cardRole": null,
+  "checklists": [],
+  "customFieldItems": [],
+  "members": [],
+  "pluginData": [],
+  "actions": [
+    {
+      "id": "6680d84c47efdf45d51c8c89",
+      "idMemberCreator": "5af892694d382ccc53eb8772",
+      "data": {
+        "card": {
+          "idLabels": [
+            "65dee444733b0a8a25029c47"
+          ],
+          "id": "667ad91a7992b292836863dc",
+          "name": "OS 00XX/2024 - XXX/XXX/XXX",
+          "idShort": 156,
+          "shortLink": "lUz21CWk"
+        },
+        "old": {
+          "idLabels": []
+        },
+        "board": {
+          "id": "65a56bbe23f31f19425d2a22",
+          "name": "2. ORDENS DE SERVIÇO",
+          "shortLink": "kJ6GP6fP"
+        },
+        "list": {
+          "id": "65a82cba073c0bfe868521b7",
+          "name": "PARA FAZER"
+        }
+      },
+      "appCreator": null,
+      "type": "updateCard",
+      "date": "2024-06-30T04:00:12.213Z",
+      "limits": null,
+      "memberCreator": {
+        "id": "5af892694d382ccc53eb8772",
+        "activityBlocked": false,
+        "avatarHash": "aa807f4dce6426610ff6e829c6cd81cd",
+        "avatarUrl": "https://trello-members.s3.amazonaws.com/5af892694d382ccc53eb8772/aa807f4dce6426610ff6e829c6cd81cd",
+        "fullName": "Marcos Vinícius Gomes Silva",
+        "idMemberReferrer": null,
+        "initials": "MS",
+        "nonPublic": {
+          "fullName": "Marcos Vinícius Gomes Silva",
+          "initials": "MS",
+          "avatarHash": null
+        },
+        "nonPublicAvailable": true,
+        "username": "marcosviniciusgomessilva"
+      }
+    },
+    {
+      "id": "6680d82a32c86fc8c26f8f14",
+      "idMemberCreator": "5af892694d382ccc53eb8772",
+      "data": {
+        "card": {
+          "idLabels": [],
+          "id": "667ad91a7992b292836863dc",
+          "name": "OS 00XX/2024 - XXX/XXX/XXX",
+          "idShort": 156,
+          "shortLink": "lUz21CWk"
+        },
+        "old": {
+          "idLabels": [
+            "6680d80faf4f193d9bc7db8b"
+          ]
+        },
+        "board": {
+          "id": "65a56bbe23f31f19425d2a22",
+          "name": "2. ORDENS DE SERVIÇO",
+          "shortLink": "kJ6GP6fP"
+        },
+        "list": {
+          "id": "65a82cba073c0bfe868521b7",
+          "name": "PARA FAZER"
+        }
+      },
+      "appCreator": null,
+      "type": "updateCard",
+      "date": "2024-06-30T03:59:38.078Z",
+      "limits": null,
+      "memberCreator": {
+        "id": "5af892694d382ccc53eb8772",
+        "activityBlocked": false,
+        "avatarHash": "aa807f4dce6426610ff6e829c6cd81cd",
+        "avatarUrl": "https://trello-members.s3.amazonaws.com/5af892694d382ccc53eb8772/aa807f4dce6426610ff6e829c6cd81cd",
+        "fullName": "Marcos Vinícius Gomes Silva",
+        "idMemberReferrer": null,
+        "initials": "MS",
+        "nonPublic": {
+          "fullName": "Marcos Vinícius Gomes Silva",
+          "initials": "MS",
+          "avatarHash": null
+        },
+        "nonPublicAvailable": true,
+        "username": "marcosviniciusgomessilva"
+      }
+    },
+    {
+      "id": "6680d7faac29da28feafee8c",
+      "idMemberCreator": "5af892694d382ccc53eb8772",
+      "data": {
+        "card": {
+          "idLabels": [],
+          "id": "667ad91a7992b292836863dc",
+          "name": "OS 00XX/2024 - XXX/XXX/XXX",
+          "idShort": 156,
+          "shortLink": "lUz21CWk"
+        },
+        "old": {
+          "idLabels": [
+            "6680d7f6555984685d150da5"
+          ]
+        },
+        "board": {
+          "id": "65a56bbe23f31f19425d2a22",
+          "name": "2. ORDENS DE SERVIÇO",
+          "shortLink": "kJ6GP6fP"
+        },
+        "list": {
+          "id": "65a82cba073c0bfe868521b7",
+          "name": "PARA FAZER"
+        }
+      },
+      "appCreator": null,
+      "type": "updateCard",
+      "date": "2024-06-30T03:58:50.385Z",
+      "limits": null,
+      "memberCreator": {
+        "id": "5af892694d382ccc53eb8772",
+        "activityBlocked": false,
+        "avatarHash": "aa807f4dce6426610ff6e829c6cd81cd",
+        "avatarUrl": "https://trello-members.s3.amazonaws.com/5af892694d382ccc53eb8772/aa807f4dce6426610ff6e829c6cd81cd",
+        "fullName": "Marcos Vinícius Gomes Silva",
+        "idMemberReferrer": null,
+        "initials": "MS",
+        "nonPublic": {
+          "fullName": "Marcos Vinícius Gomes Silva",
+          "initials": "MS",
+          "avatarHash": null
+        },
+        "nonPublicAvailable": true,
+        "username": "marcosviniciusgomessilva"
+      }
+    },
+    {
+      "id": "6680d0a0f5e85b1bc5136c2c",
+      "idMemberCreator": "5af892694d382ccc53eb8772",
+      "data": {
+        "card": {
+          "desc": "**Nome da Missão**: [coloque aqui o nome da missão]\n\n**Local da missão**: [coloque aqui o local da missão. Ex: COMAE, BABV, BAMN, ICEA, COMPREP, BACC, BACO, HFAB, MD]\n\n**Cidade da missão:** Ex: Anápolis - GO\n\n‌\n\n‌\n\n‌\n\n:airplane: inserir as datas",
+          "id": "667ad91a7992b292836863dc",
+          "name": "OS 00XX/2024 - XXX/XXX/XXX",
+          "idShort": 156,
+          "shortLink": "lUz21CWk"
+        },
+        "old": {
+          "desc": "**Nome da Missão**: [coloque aqui o nome da missão]\n\n**Local da missão**: [coloque aqui o local da missão. Ex: COMAE, BABV, BAMN, ICEA, COMPREP, BACC, BACO, HFAB, MD]\n\n**Cidade da missão:**\n\n‌\n\n‌\n\n‌\n\n:airplane: inserir as datas"
+        },
+        "board": {
+          "id": "65a56bbe23f31f19425d2a22",
+          "name": "2. ORDENS DE SERVIÇO",
+          "shortLink": "kJ6GP6fP"
+        },
+        "list": {
+          "id": "65a82cba073c0bfe868521b7",
+          "name": "PARA FAZER"
+        }
+      },
+      "appCreator": null,
+      "type": "updateCard",
+      "date": "2024-06-30T03:27:28.809Z",
+      "limits": null,
+      "memberCreator": {
+        "id": "5af892694d382ccc53eb8772",
+        "activityBlocked": false,
+        "avatarHash": "aa807f4dce6426610ff6e829c6cd81cd",
+        "avatarUrl": "https://trello-members.s3.amazonaws.com/5af892694d382ccc53eb8772/aa807f4dce6426610ff6e829c6cd81cd",
+        "fullName": "Marcos Vinícius Gomes Silva",
+        "idMemberReferrer": null,
+        "initials": "MS",
+        "nonPublic": {
+          "fullName": "Marcos Vinícius Gomes Silva",
+          "initials": "MS",
+          "avatarHash": null
+        },
+        "nonPublicAvailable": true,
+        "username": "marcosviniciusgomessilva"
+      }
+    },
+    {
+      "id": "66809d7a38a7bb5787d4ee6a",
+      "idMemberCreator": "5af892694d382ccc53eb8772",
+      "data": {
+        "card": {
+          "desc": "**Nome da Missão**: [coloque aqui o nome da missão]\n\n**Local da missão**: [coloque aqui o local da missão. Ex: COMAE, BABV, BAMN, ICEA, COMPREP, BACC, BACO, HFAB, MD]\n\n**Cidade da missão:**\n\n‌\n\n‌\n\n‌\n\n:airplane: inserir as datas",
+          "id": "667ad91a7992b292836863dc",
+          "name": "OS 00XX/2024 - XXX/XXX/XXX",
+          "idShort": 156,
+          "shortLink": "lUz21CWk"
+        },
+        "old": {
+          "desc": "**Nome da Missão**: [coloque aqui o nome da missão]\n\n**Local da missão**: [coloque aqui o local da missão. Ex: COMAE, BABV, BAMN, ICEA, COMPREP, BACC, BACO, HFAB, MD]\n\n‌\n\n‌\n\n‌\n\n:airplane: inserir as datas"
+        },
+        "board": {
+          "id": "65a56bbe23f31f19425d2a22",
+          "name": "2. ORDENS DE SERVIÇO",
+          "shortLink": "kJ6GP6fP"
+        },
+        "list": {
+          "id": "65a82cba073c0bfe868521b7",
+          "name": "PARA FAZER"
+        }
+      },
+      "appCreator": null,
+      "type": "updateCard",
+      "date": "2024-06-29T23:49:14.425Z",
+      "limits": null,
+      "memberCreator": {
+        "id": "5af892694d382ccc53eb8772",
+        "activityBlocked": false,
+        "avatarHash": "aa807f4dce6426610ff6e829c6cd81cd",
+        "avatarUrl": "https://trello-members.s3.amazonaws.com/5af892694d382ccc53eb8772/aa807f4dce6426610ff6e829c6cd81cd",
+        "fullName": "Marcos Vinícius Gomes Silva",
+        "idMemberReferrer": null,
+        "initials": "MS",
+        "nonPublic": {
+          "fullName": "Marcos Vinícius Gomes Silva",
+          "initials": "MS",
+          "avatarHash": null
+        },
+        "nonPublicAvailable": true,
+        "username": "marcosviniciusgomessilva"
+      }
+    },
+    {
+      "id": "667dae1ba9add2f278ea5c78",
+      "idMemberCreator": "5e0a70aefab29682c77fc51e",
+      "data": {
+        "card": {
+          "desc": "**Nome da Missão**: [coloque aqui o nome da missão]\n\n**Local da missão**: [coloque aqui o local da missão. Ex: COMAE, BABV, BAMN, ICEA, COMPREP, BACC, BACO, HFAB, MD]\n\n‌\n\n‌\n\n‌\n\n:airplane: inserir as datas",
+          "id": "667ad91a7992b292836863dc",
+          "name": "OS 00XX/2024 - XXX/XXX/XXX",
+          "idShort": 156,
+          "shortLink": "lUz21CWk"
+        },
+        "old": {
+          "desc": "missão: [coloque aqui o nome da missão]\n\nLOCAL:\n\nApresentação\n\nIDA:  /  /  .   :\n\nVOLTA:  /  /  .   :\n\n‌\n\n‌\n\n:airplane: inserir as datas"
+        },
+        "board": {
+          "id": "65a56bbe23f31f19425d2a22",
+          "name": "2. ORDENS DE SERVIÇO",
+          "shortLink": "kJ6GP6fP"
+        },
+        "list": {
+          "id": "65a82cba073c0bfe868521b7",
+          "name": "PARA FAZER"
+        }
+      },
+      "appCreator": null,
+      "type": "updateCard",
+      "date": "2024-06-27T18:23:23.975Z",
+      "limits": null,
+      "memberCreator": {
+        "id": "5e0a70aefab29682c77fc51e",
+        "activityBlocked": false,
+        "avatarHash": "2a415ed8ad6011cf928343b2d96442f6",
+        "avatarUrl": "https://trello-members.s3.amazonaws.com/5e0a70aefab29682c77fc51e/2a415ed8ad6011cf928343b2d96442f6",
+        "fullName": "Thiago Vieira",
+        "idMemberReferrer": null,
+        "initials": "TV",
+        "nonPublic": {
+
+        },
+        "nonPublicAvailable": true,
+        "username": "thiago_692"
+      }
+    },
+    {
+      "id": "667dadaa3f21420e080ed265",
+      "idMemberCreator": "5e0a70aefab29682c77fc51e",
+      "data": {
+        "card": {
+          "closed": false,
+          "id": "667ad91a7992b292836863dc",
+          "name": "OS 00XX/2024 - XXX/XXX/XXX",
+          "idShort": 156,
+          "shortLink": "lUz21CWk"
+        },
+        "old": {
+          "closed": true
+        },
+        "board": {
+          "id": "65a56bbe23f31f19425d2a22",
+          "name": "2. ORDENS DE SERVIÇO",
+          "shortLink": "kJ6GP6fP"
+        },
+        "list": {
+          "id": "65a82cba073c0bfe868521b7",
+          "name": "PARA FAZER"
+        }
+      },
+      "appCreator": null,
+      "type": "updateCard",
+      "date": "2024-06-27T18:21:30.059Z",
+      "limits": null,
+      "memberCreator": {
+        "id": "5e0a70aefab29682c77fc51e",
+        "activityBlocked": false,
+        "avatarHash": "2a415ed8ad6011cf928343b2d96442f6",
+        "avatarUrl": "https://trello-members.s3.amazonaws.com/5e0a70aefab29682c77fc51e/2a415ed8ad6011cf928343b2d96442f6",
+        "fullName": "Thiago Vieira",
+        "idMemberReferrer": null,
+        "initials": "TV",
+        "nonPublic": {
+
+        },
+        "nonPublicAvailable": true,
+        "username": "thiago_692"
+      }
+    },
+    {
+      "id": "667d8f1e908cd5fee5d974e4",
+      "idMemberCreator": "5e0a70aefab29682c77fc51e",
+      "data": {
+        "card": {
+          "desc": "missão: [coloque aqui o nome da missão]\n\nLOCAL:\n\nApresentação\n\nIDA:  /  /  .   :\n\nVOLTA:  /  /  .   :\n\n‌\n\n‌\n\n:airplane: inserir as datas",
+          "id": "667ad91a7992b292836863dc",
+          "name": "OS 00XX/2024 - XXX/XXX/XXX",
+          "idShort": 156,
+          "shortLink": "lUz21CWk"
+        },
+        "old": {
+          "desc": "missão: [coloque aqui o nome da missão]\n\nLOCAL:\n\nApresentação\n\nIDA:  /  /  .   :\n\nVOLTA:  /  /  .   :"
+        },
+        "board": {
+          "id": "65a56bbe23f31f19425d2a22",
+          "name": "2. ORDENS DE SERVIÇO",
+          "shortLink": "kJ6GP6fP"
+        },
+        "list": {
+          "id": "65a82cba073c0bfe868521b7",
+          "name": "PARA FAZER"
+        }
+      },
+      "appCreator": null,
+      "type": "updateCard",
+      "date": "2024-06-27T16:11:10.777Z",
+      "limits": null,
+      "memberCreator": {
+        "id": "5e0a70aefab29682c77fc51e",
+        "activityBlocked": false,
+        "avatarHash": "2a415ed8ad6011cf928343b2d96442f6",
+        "avatarUrl": "https://trello-members.s3.amazonaws.com/5e0a70aefab29682c77fc51e/2a415ed8ad6011cf928343b2d96442f6",
+        "fullName": "Thiago Vieira",
+        "idMemberReferrer": null,
+        "initials": "TV",
+        "nonPublic": {
+
+        },
+        "nonPublicAvailable": true,
+        "username": "thiago_692"
+      }
+    },
+    {
+      "id": "667d7ad318f69a76bae9e7a3",
+      "idMemberCreator": "5e0a70aefab29682c77fc51e",
+      "data": {
+        "card": {
+          "closed": true,
+          "id": "667ad91a7992b292836863dc",
+          "name": "OS 00XX/2024 - XXX/XXX/XXX",
+          "idShort": 156,
+          "shortLink": "lUz21CWk"
+        },
+        "old": {
+          "closed": false
+        },
+        "board": {
+          "id": "65a56bbe23f31f19425d2a22",
+          "name": "2. ORDENS DE SERVIÇO",
+          "shortLink": "kJ6GP6fP"
+        },
+        "list": {
+          "id": "65a82cba073c0bfe868521b7",
+          "name": "PARA FAZER"
+        }
+      },
+      "appCreator": null,
+      "type": "updateCard",
+      "date": "2024-06-27T14:44:35.319Z",
+      "limits": null,
+      "memberCreator": {
+        "id": "5e0a70aefab29682c77fc51e",
+        "activityBlocked": false,
+        "avatarHash": "2a415ed8ad6011cf928343b2d96442f6",
+        "avatarUrl": "https://trello-members.s3.amazonaws.com/5e0a70aefab29682c77fc51e/2a415ed8ad6011cf928343b2d96442f6",
+        "fullName": "Thiago Vieira",
+        "idMemberReferrer": null,
+        "initials": "TV",
+        "nonPublic": {
+
+        },
+        "nonPublicAvailable": true,
+        "username": "thiago_692"
+      }
+    },
+    {
+      "id": "667d7aa9f998d9bf41be2620",
+      "idMemberCreator": "5e0a70aefab29682c77fc51e",
+      "data": {
+        "card": {
+          "desc": "missão: [coloque aqui o nome da missão]\n\nLOCAL:\n\nApresentação\n\nIDA:  /  /  .   :\n\nVOLTA:  /  /  .   :",
+          "id": "667ad91a7992b292836863dc",
+          "name": "OS 00XX/2024 - XXX/XXX/XXX",
+          "idShort": 156,
+          "shortLink": "lUz21CWk"
+        },
+        "old": {
+          "desc": "missão: [coloque aqui o nome da missão]\n\nApresentação\n\nIDA:  /  /  .   :\n\nVOLTA:  /  /  .   :"
+        },
+        "board": {
+          "id": "65a56bbe23f31f19425d2a22",
+          "name": "2. ORDENS DE SERVIÇO",
+          "shortLink": "kJ6GP6fP"
+        },
+        "list": {
+          "id": "65a82cba073c0bfe868521b7",
+          "name": "PARA FAZER"
+        }
+      },
+      "appCreator": null,
+      "type": "updateCard",
+      "date": "2024-06-27T14:43:53.001Z",
+      "limits": null,
+      "memberCreator": {
+        "id": "5e0a70aefab29682c77fc51e",
+        "activityBlocked": false,
+        "avatarHash": "2a415ed8ad6011cf928343b2d96442f6",
+        "avatarUrl": "https://trello-members.s3.amazonaws.com/5e0a70aefab29682c77fc51e/2a415ed8ad6011cf928343b2d96442f6",
+        "fullName": "Thiago Vieira",
+        "idMemberReferrer": null,
+        "initials": "TV",
+        "nonPublic": {
+
+        },
+        "nonPublicAvailable": true,
+        "username": "thiago_692"
+      }
+    },
+    {
+      "id": "667d73b4ed99e291799d3bb8",
+      "idMemberCreator": "5e0a70aefab29682c77fc51e",
+      "data": {
+        "card": {
+          "name": "OS 00XX/2024 - XXX/XXX/XXX",
+          "id": "667ad91a7992b292836863dc",
+          "idShort": 156,
+          "shortLink": "lUz21CWk"
+        },
+        "old": {
+          "name": "OS XXX/2024 - XXX/XXX/XXX"
+        },
+        "board": {
+          "id": "65a56bbe23f31f19425d2a22",
+          "name": "2. ORDENS DE SERVIÇO",
+          "shortLink": "kJ6GP6fP"
+        },
+        "list": {
+          "id": "65a82cba073c0bfe868521b7",
+          "name": "PARA FAZER"
+        }
+      },
+      "appCreator": null,
+      "type": "updateCard",
+      "date": "2024-06-27T14:14:12.700Z",
+      "limits": null,
+      "memberCreator": {
+        "id": "5e0a70aefab29682c77fc51e",
+        "activityBlocked": false,
+        "avatarHash": "2a415ed8ad6011cf928343b2d96442f6",
+        "avatarUrl": "https://trello-members.s3.amazonaws.com/5e0a70aefab29682c77fc51e/2a415ed8ad6011cf928343b2d96442f6",
+        "fullName": "Thiago Vieira",
+        "idMemberReferrer": null,
+        "initials": "TV",
+        "nonPublic": {
+
+        },
+        "nonPublicAvailable": true,
+        "username": "thiago_692"
+      }
+    },
+    {
+      "id": "667d71dddd7734dc4feb456a",
+      "idMemberCreator": "5e0a70aefab29682c77fc51e",
+      "data": {
+        "card": {
+          "desc": "missão: [coloque aqui o nome da missão]\n\nApresentação\n\nIDA:  /  /  .   :\n\nVOLTA:  /  /  .   :",
+          "id": "667ad91a7992b292836863dc",
+          "name": "OS XXX/2024 - XXX/XXX/XXX",
+          "idShort": 156,
+          "shortLink": "lUz21CWk"
+        },
+        "old": {
+          "desc": "missão: [coloque aqui o nome da missão]"
+        },
+        "board": {
+          "id": "65a56bbe23f31f19425d2a22",
+          "name": "2. ORDENS DE SERVIÇO",
+          "shortLink": "kJ6GP6fP"
+        },
+        "list": {
+          "id": "65a82cba073c0bfe868521b7",
+          "name": "PARA FAZER"
+        }
+      },
+      "appCreator": null,
+      "type": "updateCard",
+      "date": "2024-06-27T14:06:21.857Z",
+      "limits": null,
+      "memberCreator": {
+        "id": "5e0a70aefab29682c77fc51e",
+        "activityBlocked": false,
+        "avatarHash": "2a415ed8ad6011cf928343b2d96442f6",
+        "avatarUrl": "https://trello-members.s3.amazonaws.com/5e0a70aefab29682c77fc51e/2a415ed8ad6011cf928343b2d96442f6",
+        "fullName": "Thiago Vieira",
+        "idMemberReferrer": null,
+        "initials": "TV",
+        "nonPublic": {
+
+        },
+        "nonPublicAvailable": true,
+        "username": "thiago_692"
+      }
+    },
+    {
+      "id": "667ad94741865a1373b3efe0",
+      "idMemberCreator": "5e0a70aefab29682c77fc51e",
+      "data": {
+        "card": {
+          "desc": "missão: [coloque aqui o nome da missão]",
+          "id": "667ad91a7992b292836863dc",
+          "name": "OS XXX/2024 - XXX/XXX/XXX",
+          "idShort": 156,
+          "shortLink": "lUz21CWk"
+        },
+        "old": {
+          "desc": ""
+        },
+        "board": {
+          "id": "65a56bbe23f31f19425d2a22",
+          "name": "2. ORDENS DE SERVIÇO",
+          "shortLink": "kJ6GP6fP"
+        },
+        "list": {
+          "id": "65a82cba073c0bfe868521b7",
+          "name": "PARA FAZER"
+        }
+      },
+      "appCreator": null,
+      "type": "updateCard",
+      "date": "2024-06-25T14:50:47.600Z",
+      "limits": null,
+      "memberCreator": {
+        "id": "5e0a70aefab29682c77fc51e",
+        "activityBlocked": false,
+        "avatarHash": "2a415ed8ad6011cf928343b2d96442f6",
+        "avatarUrl": "https://trello-members.s3.amazonaws.com/5e0a70aefab29682c77fc51e/2a415ed8ad6011cf928343b2d96442f6",
+        "fullName": "Thiago Vieira",
+        "idMemberReferrer": null,
+        "initials": "TV",
+        "nonPublic": {
+
+        },
+        "nonPublicAvailable": true,
+        "username": "thiago_692"
+      }
+    },
+    {
+      "id": "667ad9208d770c97d3cd5432",
+      "idMemberCreator": "5e0a70aefab29682c77fc51e",
+      "data": {
+        "card": {
+          "isTemplate": true,
+          "id": "667ad91a7992b292836863dc",
+          "name": "OS XXX/2024 - XXX/XXX/XXX",
+          "idShort": 156,
+          "shortLink": "lUz21CWk"
+        },
+        "old": {
+          "isTemplate": false
+        },
+        "board": {
+          "id": "65a56bbe23f31f19425d2a22",
+          "name": "2. ORDENS DE SERVIÇO",
+          "shortLink": "kJ6GP6fP"
+        },
+        "list": {
+          "id": "65a82cba073c0bfe868521b7",
+          "name": "PARA FAZER"
+        }
+      },
+      "appCreator": null,
+      "type": "updateCard",
+      "date": "2024-06-25T14:50:08.469Z",
+      "limits": null,
+      "memberCreator": {
+        "id": "5e0a70aefab29682c77fc51e",
+        "activityBlocked": false,
+        "avatarHash": "2a415ed8ad6011cf928343b2d96442f6",
+        "avatarUrl": "https://trello-members.s3.amazonaws.com/5e0a70aefab29682c77fc51e/2a415ed8ad6011cf928343b2d96442f6",
+        "fullName": "Thiago Vieira",
+        "idMemberReferrer": null,
+        "initials": "TV",
+        "nonPublic": {
+
+        },
+        "nonPublicAvailable": true,
+        "username": "thiago_692"
+      }
+    },
+    {
+      "id": "667ad91a7992b292836863e5",
+      "idMemberCreator": "5e0a70aefab29682c77fc51e",
+      "data": {
+        "card": {
+          "id": "667ad91a7992b292836863dc",
+          "name": "OS XXX/2024 - XXX/XXX/XXX",
+          "idShort": 156,
+          "shortLink": "lUz21CWk"
+        },
+        "list": {
+          "id": "65a82cba073c0bfe868521b7",
+          "name": "PARA FAZER"
+        },
+        "board": {
+          "id": "65a56bbe23f31f19425d2a22",
+          "name": "2. ORDENS DE SERVIÇO",
+          "shortLink": "kJ6GP6fP"
+        }
+      },
+      "appCreator": null,
+      "type": "createCard",
+      "date": "2024-06-25T14:50:02.326Z",
+      "limits": null,
+      "memberCreator": {
+        "id": "5e0a70aefab29682c77fc51e",
+        "activityBlocked": false,
+        "avatarHash": "2a415ed8ad6011cf928343b2d96442f6",
+        "avatarUrl": "https://trello-members.s3.amazonaws.com/5e0a70aefab29682c77fc51e/2a415ed8ad6011cf928343b2d96442f6",
+        "fullName": "Thiago Vieira",
+        "idMemberReferrer": null,
+        "initials": "TV",
+        "nonPublic": {
+
+        },
+        "nonPublicAvailable": true,
+        "username": "thiago_692"
+      }
+    }
+  ]
+}
