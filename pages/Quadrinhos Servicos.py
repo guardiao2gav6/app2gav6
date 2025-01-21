@@ -2,6 +2,7 @@ import pandas as pd
 import altair as alt
 from dados_gsheets import Dados
 import streamlit as st
+import datetime
 
 
 # Função utilizada para gerar uma coluna com o total de serviços tirados
@@ -97,6 +98,17 @@ detalhes_tripulantes_sobreaviso = dados.get_detalhes_tripulantes_sobreaviso()
 detalhes_tripulantes_sobreaviso_R99_final = dados.get_detalhes_tripulantes_sobreaviso_r99()
 
 
+filtro_data_quadrinhos = st.date_input(label='Início - Término', value=[datetime.date(2025, 1, 1), datetime.date.today()])
+
+detalhes_tripulantes_sobreaviso['data'] = pd.to_datetime(detalhes_tripulantes_sobreaviso['data'], format='%d/%m/%Y')
+detalhes_tripulantes_sobreaviso_filtrado = detalhes_tripulantes_sobreaviso.loc[(detalhes_tripulantes_sobreaviso['data'].dt.date)>=filtro_data_quadrinhos[0]]
+
+detalhes_tripulantes_sobreaviso_R99_final['data'] = pd.to_datetime(detalhes_tripulantes_sobreaviso_R99_final['data'], format='%d/%m/%Y')
+detalhes_tripulantes_sobreaviso_r99_filtrado = detalhes_tripulantes_sobreaviso_R99_final.loc[(detalhes_tripulantes_sobreaviso_R99_final['data'].dt.date)>=filtro_data_quadrinhos[0]]
+
+OPO_df['data'] = pd.to_datetime(OPO_df['data'], format="%d/%m/%Y")
+OPO_df_filtrado = OPO_df.loc[(OPO_df['data'].dt.date) >= filtro_data_quadrinhos[0]]
+
 # Obtendo apenas os miitares que tiram OPO ou SA
 militares_opo_sa = dados_pessoais_df.loc[dados_pessoais_df['sigla_funcao'].isin(['PIL',
                                                                                  'PIL/CC-R',
@@ -104,26 +116,26 @@ militares_opo_sa = dados_pessoais_df.loc[dados_pessoais_df['sigla_funcao'].isin(
                                                                                  'CC-R']), 'trigrama'].to_list()
 militares_opo = dados_pessoais_df.loc[(dados_pessoais_df['sigla_funcao'].isin(['PIL',
                                                                                'CC-R',
-                                                                               'PIL/COTAT'])) |
+                                                                               'PIL/COTAT',
+                                                                               'PIL/CC-R'])) |
                                       (dados_pessoais_df['trigrama'] == 'AND'), 'trigrama'].to_list()
 
 militares_sobreaviso_R99 = dados_pessoais_df.loc[dados_pessoais_df['sigla_funcao'].isin(['PIL/COTAT',
                                                                                         'COTAT']), 'trigrama'].to_list()
 
 #   Removendo militares que se encaixam nos padrões acima, porém não tiram serviço (CMT e S3)
-militares_opo.remove('DAT')
 
 # Tratamento dos dados
-OPO_filtrado = filter_data(OPO_df)
-OPO_chart_data = generate_chart_data(OPO_filtrado, militares_opo)
+OPO_cumpridos = filter_data(OPO_df_filtrado)
+OPO_chart_data = generate_chart_data(OPO_cumpridos, militares_opo)
 OPO_chart = generate_chart(OPO_chart_data)
 
-SOBREAVISO_filtrado = filter_data(detalhes_tripulantes_sobreaviso)
-SOBREAVISO_chart_data = generate_chart_data(SOBREAVISO_filtrado, militares_opo_sa)
+SOBREAVISO_CUMPRIDO = filter_data(detalhes_tripulantes_sobreaviso_filtrado)
+SOBREAVISO_chart_data = generate_chart_data(SOBREAVISO_CUMPRIDO, militares_opo_sa)
 SOBREAVISO_chart = generate_chart(SOBREAVISO_chart_data)
 
-SOBREAVISO_R99_filtrado = filter_data(detalhes_tripulantes_sobreaviso_R99_final)
-SOBREAVISO_R99_chart_data = generate_chart_data(detalhes_tripulantes_sobreaviso_R99_final, militares_sobreaviso_R99)
+SOBREAVISO_R99_CUMPRIDO = filter_data(detalhes_tripulantes_sobreaviso_r99_filtrado)
+SOBREAVISO_R99_chart_data = generate_chart_data(SOBREAVISO_R99_CUMPRIDO, militares_sobreaviso_R99)
 SOBREAVISO_R99_chart = generate_chart(SOBREAVISO_R99_chart_data)
 
 # Concatenando as tabelas de serviços para obter o total
@@ -140,15 +152,15 @@ st.markdown('---')
 
 st.markdown('#### OPO')
 if st.checkbox('Mostrar Dados - OPO'):
-    st.dataframe(OPO_filtrado)
+    st.dataframe(OPO_cumpridos)
 st.altair_chart(OPO_chart, use_container_width=True)
 
 st.markdown("#### Sobreaviso CAV")
 if st.checkbox('Mostrar Dados - SOBREAVISO'):
-    st.dataframe(SOBREAVISO_filtrado)
+    st.dataframe(SOBREAVISO_CUMPRIDO)
 st.altair_chart(SOBREAVISO_chart, use_container_width=True)
 
 st.markdown('#### Sobreaviso R-99')
 if st.checkbox('Mostrar Dados - SOBREAVISO R99'):
-    st.dataframe(SOBREAVISO_R99_filtrado)
+    st.dataframe(SOBREAVISO_R99_CUMPRIDO)
 st.altair_chart(SOBREAVISO_R99_chart, use_container_width=True)
