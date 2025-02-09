@@ -43,6 +43,7 @@ def gerar_grafico_pau_de_sebo(detalhes_tripulantes_df,
     pau_de_sebo_df = pau_de_sebo.pau_de_sebo_pilotos(detalhes_tripulantes_df=detalhes_tripulantes_df,
                                                      meta_pilotos_df=meta_pilotos_df,
                                                      dados_pessoais_df=dados_pessoais_df)
+    st.write(pau_de_sebo_df)
     base = alt.Chart(pau_de_sebo_df).transform_fold(
         ['LSP', 'RSP'],
         as_=['Categoria', 'value']
@@ -426,13 +427,8 @@ def gerar_grafico_demais_funcoes(funcao,
                                  dados_pessoais_df):
     pau_de_sebo_df = pau_de_sebo.pau_de_sebo_demais_tripulantes(detalhes_tripulantes_df=detalhes_tripulantes_df,
                                                                 dados_pessoais_df=dados_pessoais_df)
-
-    if funcao == 'Oficiais':
-        pau_de_sebo_filtrado = pau_de_sebo_df.loc[(pau_de_sebo_df['funcao_a_bordo'].isin(
-            funcoes_agrupadas.get(funcao))) | (pau_de_sebo_df['tripulante'] == 'DED')]
-    else:
-        pau_de_sebo_filtrado = pau_de_sebo_df.loc[pau_de_sebo_df['funcao_a_bordo'].isin(
-            funcoes_agrupadas.get(funcao))]
+    pau_de_sebo_filtrado = pau_de_sebo_df.loc[pau_de_sebo_df['funcao_a_bordo'].isin(
+        funcoes_agrupadas.get(funcao))]
 
     pau_de_sebo_sem_alunos = pau_de_sebo_filtrado.drop(
         pau_de_sebo_filtrado[pau_de_sebo_filtrado['funcao_a_bordo'].isin(lista_funcoes_alunos)].index)

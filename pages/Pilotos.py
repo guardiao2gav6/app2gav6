@@ -7,17 +7,19 @@ import pandas as pd
 
 
 # Carregando dados da página
+filtro_data_pau_sebo = st.date_input(label='Início - Término', value=[datetime.date(2025, 1, 1), datetime.date.today()])
+
 dados = Dados()
-detalhes_tripulantes_df = dados.generate_detalhes_tripulantes_df()
+detalhes_tripulantes_df = dados.generate_detalhes_tripulantes_df(filtro_data_pau_sebo)
 meta_pilotos_df = dados.generate_meta_pilotos_df()
 dados_pessoais_df = dados.get_dados_pessoais()
 descidas_df = dados.get_descidas()
 aeronaves_df = dados.get_aeronaves()
 esforco_aereo_df = dados.get_esforco_aereo()
+militares = dados.get_militares(filtro_data_pau_sebo, filtro_aeronave=['E-99', 'R-99'], filtro_esforco_aereo=['SESQAE'])
 
 
 
-filtro_data_pau_sebo = st.date_input(label='Início - Término', value=[datetime.date(2025, 1, 1), datetime.date.today()])
 detalhes_tripulantes_df_filtrada = detalhes_tripulantes_df.loc[(detalhes_tripulantes_df['data_voo'].dt.date)>=filtro_data_pau_sebo[0]]
 descidas_df['data'] = pd.to_datetime(descidas_df['data'], format='%d/%m/%Y %H:%M:%S')
 descidas_df_filtrada = descidas_df.loc[descidas_df['data'].dt.date >= filtro_data_pau_sebo[0]]
@@ -64,3 +66,4 @@ cesta_basica_trimestre = cesta_basica.gerar_cesta_basica(trimestre=numero_trimes
                                                          descidas_df=descidas_df_filtrada,
                                                          dados_pessoais_df=dados_pessoais_df)
 st.dataframe(cesta_basica_trimestre, use_container_width=True)
+st.dataframe(adaptacao_dados)

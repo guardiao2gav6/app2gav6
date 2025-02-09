@@ -16,4 +16,5 @@ def funcoes_tripulantes(dados_pessoais):
 
     funcoes_tripulantes_df = pd.DataFrame({'trigrama': trigramas_temp,
                                            'funcao_a_bordo': funcao_a_bordo_temp})
+    
     return funcoes_tripulantes_df

@@ -13,7 +13,6 @@ descidas_df = dados.get_descidas()
 aeronaves_df = dados.get_aeronaves()
 esforco_aereo_df = dados.get_esforco_aereo()
 
-
 filtro_data_pau_sebo_tripulantes = st.date_input(label='Início - Término', value=[datetime.date(2025, 1, 1), datetime.date.today()])
 detalhes_tripulantes_df_filtrada = detalhes_tripulantes_df.loc[(detalhes_tripulantes_df['data_voo'].dt.date)>=filtro_data_pau_sebo_tripulantes[0]]
 

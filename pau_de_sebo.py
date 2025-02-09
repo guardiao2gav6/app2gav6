@@ -2,7 +2,10 @@ import pandas as pd
 import time_handler
 import funcoes_tripulantes
 import streamlit as st
+from dados_gsheets import Dados
 
+
+dados = Dados()
 
 def pau_de_sebo_demais_tripulantes(detalhes_tripulantes_df,
                                    dados_pessoais_df):
@@ -29,6 +32,7 @@ def pau_de_sebo_pilotos(detalhes_tripulantes_df,
                         dados_pessoais_df):
 
     tripulantes = funcoes_tripulantes.funcoes_tripulantes(dados_pessoais_df)
+
     tripulantes.rename(columns={'trigrama': 'tripulante'}, inplace=True)
 
     pilotos_unicos = tripulantes.loc[tripulantes['funcao_a_bordo'].isin(['AL',
@@ -52,6 +56,7 @@ def pau_de_sebo_pilotos(detalhes_tripulantes_df,
                                               columns='posicao_a_bordo',
                                               aggfunc='sum',
                                               fill_value=0)
+    
     pau_sebo_pilotos = pilotos_unicos.merge(right=pau_sebo_pilotos_parcial, how='left', on='tripulante').fillna(0)
     pau_sebo_pilotos['Total_minutos'] = pau_sebo_pilotos['LSP'] + pau_sebo_pilotos['RSP']
     pau_sebo_pilotos['LSP_label'] = pau_sebo_pilotos['LSP'].map(time_handler.transform_minutes_to_duration_string)
