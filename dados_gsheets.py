@@ -44,9 +44,6 @@ class Dados:
         detalhes_tripulantes_df = self.connect_to_worksheet(id_worksheet=id_detalhes_trip_voo)
         detalhes_tripulantes_df['data_voo'] = pd.to_datetime(detalhes_tripulantes_df['data_voo'],
                                                              format="%d/%m/%Y").dt.date
-        detalhes_tripulantes_df['posicao_a_bordo'] = detalhes_tripulantes_df['posicao_a_bordo'].fillna(True)
-        detalhes_tripulantes_df['posicao_a_bordo'] = detalhes_tripulantes_df['posicao_a_bordo'].map(
-            lambda x: 'RSP' if x else 'LSP')
 
         registros_de_voos_df = self.generate_registros_voos_df()
 
