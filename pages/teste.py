@@ -71,7 +71,6 @@ labels = [label for label in horas_militares[0].keys() if label not in grupo]
 df_long = df_horas_militares.melt(id_vars=labels, value_vars=grupo, 
                    var_name='funcoes', value_name='horas')
 
-st.dataframe(df_long)
 base = alt.Chart(df_long)
 
 grafico = base.mark_bar(size=20).encode(
@@ -122,9 +121,9 @@ adaptacao_militares = list(map(lambda x: x.adaptacao, militares_filtrados_por_gr
 adaptacao_militares = [item for sublista in adaptacao_militares for item in sublista if item['funcao_a_bordo'] in grupo]
 
 df_adaptacao_militares = pd.DataFrame(adaptacao_militares)
+df_adaptacao_militares['dias_para_desadaptar'] = df_adaptacao_militares['dias_para_desadaptar'].dt.days
 
 df_adaptacao_militares = df_adaptacao_militares.sort_values(by=['funcao_a_bordo', 'dias_sem_voar'], ascending=False)
-
 
 adaptacao_base = alt.Chart(df_adaptacao_militares)
 adaptacao_chart = adaptacao_base.mark_bar(
@@ -167,5 +166,4 @@ rotulo_dias_restantes = adaptacao_base.mark_text(
 )
 
 grafico_adaptacao = (adaptacao_chart_max_sem_voar + adaptacao_chart + rotulo_dias_restantes)
-st.write(df_adaptacao_militares)
 st.altair_chart(grafico_adaptacao, use_container_width=True)
