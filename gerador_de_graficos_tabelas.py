@@ -441,18 +441,23 @@ def gerar_grafico_demais_funcoes(funcao,
         time_handler.transform_minutes_to_duration_string)
 
     pau_de_sebo_chart_base = alt.Chart(pau_de_sebo_filtrado)
-    pau_de_sebo_chart = pau_de_sebo_chart_base.mark_bar(
-        size=30,
-    ).encode(
-        x=alt.X('tripulante:N', sort=alt.EncodingSortField(field='tempo_de_voo_minutos', op='sum', order='descending'),
-                axis=alt.Axis(title='', labelFontSize=18, labelAngle=0, labelPadding=10, labelColor='#747575')),
-        y=alt.Y('tempo_de_voo_minutos_funcao:Q', axis=alt.Axis(title='', labels=False)),
+    pau_de_sebo_chart = pau_de_sebo_chart_base.mark_bar(size=30).encode(
+        x=alt.X('tripulante:N',
+                sort=alt.EncodingSortField(field='tempo_de_voo_minutos',
+                                           op='sum',
+                                           order='descending'),
+                axis=alt.Axis(title='',
+                              labelFontSize=18,
+                              labelAngle=0,
+                              labelPadding=10,
+                              labelColor='#747575')),
+        y=alt.Y('tempo_de_voo_minutos_funcao:Q',
+                axis=alt.Axis(title='',
+                              labels=False)),
         color= alt.Color('funcao_a_bordo:N',
             scale=alt.Scale(domain=[*funcoes],
-                            range=['#194d82', '#148212', '#c8c8c8']),
-            legend=alt.Legend(title='Função a Bordo',
-                              orient='top')
-        ),
+                            range=['#219ebc', '#023047', '#fb8500', '#1a8273']),
+            legend=alt.Legend(title='Função a Bordo', orient='top')),
         tooltip=[alt.Tooltip('tripulante:N', title='Trig: '),
                  alt.Tooltip('Tempo de Voo:N', title='Horas voadas: ')]
     )
