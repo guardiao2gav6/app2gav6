@@ -81,13 +81,7 @@ if st.checkbox(label='Mostrar Dados'):
     st.dataframe(pau_de_sebo_demais_funcoes_chart[1].drop(columns=['tempo_de_voo_minutos']).set_index('tripulante'))
 
 
-st.altair_chart(pau_de_sebo_demais_funcoes_chart[0].properties(title=alt.TitleParams(
-    text=" ",
-    subtitle=f'A linha tracejada representa 75% da média ({pau_de_sebo_demais_funcoes_chart[2]}).',
-    subtitleFontSize=16,
-    fontSize=1,
-    anchor='start'
-)), use_container_width=True)
+st.altair_chart(pau_de_sebo_demais_funcoes_chart[0], use_container_width=True)
 
 st.markdown('###### A meta de Horas de Voo para tripulantes cumprindo funções que não envolvem pilotagem.')
 st.markdown('O intuito dessa meta não é atingir um mínimo de horas de voo e sim equalizar as horas entre os tripulantes'

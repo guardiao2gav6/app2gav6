@@ -5,22 +5,35 @@ import streamlit as st
 
 
 def pau_de_sebo_demais_tripulantes(detalhes_tripulantes_df,
-                                   dados_pessoais_df):
+                                   dados_pessoais_df,
+                                   funcao,
+                                   funcoes_agrupadas):
+    
 
     tripulantes = funcoes_tripulantes.funcoes_tripulantes(dados_pessoais_df)
     tripulantes.rename(columns={'trigrama': 'tripulante'}, inplace=True)
-    pau_sebo_tripulantes = detalhes_tripulantes_df.loc[detalhes_tripulantes_df['aeronave'] != 'SIM C-99']
 
-    pau_sebo_tripulantes = pau_sebo_tripulantes.groupby(
+    tripulantes_unicos = tripulantes.loc[tripulantes['funcao_a_bordo'].isin(funcoes_agrupadas[funcao])].reset_index(drop=True)
+    tripulantes_unicos = tripulantes_unicos.drop(columns='funcao_a_bordo')
+    
+    pau_sebo_tripulantes_parcial = detalhes_tripulantes_df.loc[(detalhes_tripulantes_df['aeronave'] != 'SIM C-99') &
+                                                       (detalhes_tripulantes_df['funcao_a_bordo'].isin(funcoes_agrupadas[funcao]))]
+
+    pau_sebo_tripulantes_parcial = pau_sebo_tripulantes_parcial.groupby(
         by=['tripulante',
-            'funcao_a_bordo'])[['tempo_de_voo_minutos']].sum().reset_index()
+        'funcao_a_bordo'])[['tempo_de_voo_minutos']].sum().reset_index()
 
-    pau_sebo_tripulantes = tripulantes.merge(right=pau_sebo_tripulantes, how='left', on='tripulante').fillna(0)
-    pau_sebo_tripulantes = pau_sebo_tripulantes.drop(columns='funcao_a_bordo_x')
-    pau_sebo_tripulantes = pau_sebo_tripulantes.rename(columns={'funcao_a_bordo_y': 'funcao_a_bordo'})
-    pau_sebo_tripulantes = pau_sebo_tripulantes.sort_values('tempo_de_voo_minutos',
-                                                            ascending=False).drop_duplicates(subset=['tripulante',
-                                                                                                     'funcao_a_bordo'])
+    pau_sebo_tripulantes_parcial = pd.pivot_table(pau_sebo_tripulantes_parcial,
+                                            index='tripulante',
+                                            values='tempo_de_voo_minutos',
+                                            columns='funcao_a_bordo',
+                                            aggfunc='sum',
+                                            fill_value=0)
+    
+    pau_sebo_tripulantes = tripulantes_unicos.merge(right=pau_sebo_tripulantes_parcial, how='left', on='tripulante').fillna(0)
+    pau_sebo_tripulantes['tempo_de_voo_minutos'] = pau_sebo_tripulantes.loc[:, pau_sebo_tripulantes.columns.difference(['tripulante'])].sum(axis=1)
+    
+
     return pau_sebo_tripulantes
 
 
@@ -59,5 +72,6 @@ def pau_de_sebo_pilotos(detalhes_tripulantes_df,
     pau_sebo_pilotos['Total'] = pau_sebo_pilotos['Total_minutos'].map(time_handler.transform_minutes_to_duration_string)
     pau_sebo_pilotos = pau_sebo_pilotos.sort_values('Total', ascending=False)
     pau_sebo_pilotos = pau_sebo_pilotos.merge(right=meta_pilotos_df, how='left', on='tripulante')
+    st.dataframe(pau_sebo_pilotos)
 
     return pau_sebo_pilotos
