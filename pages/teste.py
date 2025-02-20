@@ -5,34 +5,28 @@ import altair as alt
 import pandas as pd
 import time_handler
 from models.militar import Militar
+from copy import deepcopy
+from models import constantes
 
 
-def retirar_funcoes_nao_exercidas(horas_militares_filtrado_grupo, grupo):
+def somar_totais_de_horas(horas_militares_filtrado_grupo):
   result = []
-  for horas_militar in horas_militares_filtrado_grupo:
-    if grupo == Militar.posicoes_a_bordo:
-      horas_militar_filtrado = horas_militar['posicoes_a_bordo']
-      
-    else:
-      horas_militar_filtrado = {chave: valor for chave, valor in horas_militar.items() if chave in grupo
-    }
-
-    totais_horas = sum(valor for chave, valor in horas_militar_filtrado.items())
+  for horas_militar_filtrado in horas_militares_filtrado_grupo:
+    
+    totais_horas = sum(valor for chave, valor in horas_militar_filtrado.items() if isinstance(valor, int))
+    
     horas_militar_filtrado['Totais'] = totais_horas
-
-    horas_militar_filtrado = {'trigrama': horas_militar['trigrama'],
-    **horas_militar_filtrado,
-    **{chave + '_hhmm': time_handler.transform_minutes_to_duration_string(valor) for chave, valor in horas_militar_filtrado.items() if chave != 'trigrama'}}
-    result.append(horas_militar_filtrado)
+    
+    horas_militar_filtrado = {
+      **horas_militar_filtrado,
+      **{chave + '_hhmm': time_handler.transform_minutes_to_duration_string(valor) for chave, valor in horas_militar_filtrado.items() if isinstance(valor, int)}
+    }
+    
+    horas_militar_filtrado = {'trigrama': horas_militar_filtrado['trigrama'],
+    **horas_militar_filtrado}
+    result.append(deepcopy(horas_militar_filtrado))
   return result
 
-
-def filtrando_militares_por_grupo(grupo, militares):
-  if grupo == Militar.posicoes_a_bordo:
-    militares_filtrados_por_grupo = [militar for militar in militares if 'PIL' in militar.sigla_funcao]
-  else:
-    militares_filtrados_por_grupo = list(filter(lambda x: bool(set(grupo) & set(x.funcoes_a_bordo)), militares))
-  return militares_filtrados_por_grupo
 
 # Carregando dados
 dados = Dados()
@@ -42,6 +36,9 @@ esforco_aereo = dados.get_esforco_aereo()['esforco'].unique()
 # FILTROS
 filtro_periodo = st.date_input(label='Período', value=[datetime.date(2025, 1, 1), datetime.date.today()], key='periodo')
 
+voos = dados.generate_registros_voos_df(filtro_periodo)
+st.dataframe(voos)
+
 filtro_aeronave = st.multiselect(label='Aeronave', options=aeronaves)
 if not filtro_aeronave:
   filtro_aeronave = aeronaves
@@ -50,27 +47,21 @@ filtro_esforco_aereo = st.multiselect(label='Esforço Aéreo', options=esforco_a
 if not filtro_esforco_aereo:
   filtro_esforco_aereo = esforco_aereo
 
-filtro_funcao_a_bordo = st.selectbox(label='Função à Bordo', options=Militar.funcoes_agrupadas.keys())
+filtro_grupo_de_funcoes = st.selectbox(label='Função à Bordo', options=constantes.funcoes_agrupadas_sem_valores)
 
-# Extraindo dados apenas do período selecionado
-militares = dados.get_militares(filtro_periodo,
-                                filtro_aeronave,
-                                filtro_esforco_aereo)
+# Extraindo dados de voo apenas do período selecionado
+militares = dados.get_militares(filtro_periodo, filtro_aeronave, filtro_esforco_aereo, filtro_grupo_de_funcoes)
 
-# Lista de funções à bordo para cada grupo
-grupo = Militar.funcoes_agrupadas[filtro_funcao_a_bordo]
+horas_militares = list(map(lambda x: x.horas_militar(), militares))
+horas_militares_somadas = somar_totais_de_horas(horas_militares)
+df_horas_militares = pd.DataFrame(horas_militares_somadas)
 
-militares_filtrados_por_grupo = filtrando_militares_por_grupo(grupo, militares)
+funcoes = constantes.funcoes_agrupadas_sem_valores[filtro_grupo_de_funcoes]
 
-horas_militares = list(map(lambda x: x.horas_militar, militares_filtrados_por_grupo))
-horas_militares = retirar_funcoes_nao_exercidas(horas_militares,
-grupo)
-
-df_horas_militares = pd.DataFrame(horas_militares)
-labels = [label for label in horas_militares[0].keys() if label not in grupo]
-df_long = df_horas_militares.melt(id_vars=labels, value_vars=grupo, 
-                   var_name='funcoes', value_name='horas')
-
+df_long = df_horas_militares.melt(id_vars=[id_var for id_var in df_horas_militares.columns if id_var not in funcoes],
+                                  value_vars=funcoes,
+                                  var_name='funcao_posicao_a_bordo',
+                                  value_name='horas')
 base = alt.Chart(df_long)
 
 grafico = base.mark_bar(size=20).encode(
@@ -86,15 +77,11 @@ grafico = base.mark_bar(size=20).encode(
                             ticks=False)),
   y=alt.Y('horas:Q', axis=alt.Axis(title='',
                                         labels=False)),
-  color=alt.Color('funcoes:N',
-  scale=alt.Scale(domain=grupo,
+  color=alt.Color('funcao_posicao_a_bordo:N',
+  scale=alt.Scale(domain=funcoes,
   range=['#219ebc', '#023047', '#fb8500', '#1a8273']),
         legend=alt.Legend(title='Função/Posição à Bordo',
-                            orient='top')),
-                            tooltip=[
-        alt.Tooltip('trigrama:N', title='Trig: '),
-        *[alt.Tooltip(f'{label}:N', title=f'{label[:-5]}: ') for label in labels if label not in ['trigrama', 'Totais']],
-    ]
+                            orient='top'))
 )
 
 text = base.mark_text(
@@ -110,13 +97,10 @@ text = base.mark_text(
     text='Totais_hhmm:N',
 )
 
-
 st.altair_chart((grafico + text), use_container_width=True)
 
-
 # ADAPTAÇÃO
-
-adaptacao_militares = list(map(lambda x: x.adaptacao, militares_filtrados_por_grupo))
+adaptacao_militares = list(map(lambda x: x.adaptacao(), militares))
 
 adaptacao_militares = [item for sublista in adaptacao_militares for item in sublista if item['funcao_a_bordo'] in grupo]
 

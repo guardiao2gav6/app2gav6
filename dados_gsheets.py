@@ -24,7 +24,7 @@ class Dados:
         except URLError:
             return st.error("Verifique sua conexão com a internet")
 
-    def generate_registros_voos_df(self, filtro_periodo, filtro_aeronave=['E-RR', 'R-99'], filtro_esforco_aereo=['SESQAE']):
+    def generate_registros_voos_df(self, filtro_periodo, filtro_aeronave=['E-99', 'R-99'], filtro_esforco_aereo=['SESQAE']):
         id_registros_de_voos = "0"
         registros_de_voos_df = self.connect_to_worksheet(
             id_worksheet=id_registros_de_voos)
@@ -149,7 +149,7 @@ class Dados:
                                                                                    'LET'])]
         return dados_pessoais_df
 
-    def get_militares(self, filtro_periodo, filtro_aeronave, filtro_esforco_aereo):
+    def get_militares(self, filtro_periodo, filtro_aeronave, filtro_esforco_aereo, filtro_grupo):
         dados_pessoais_df = self.get_dados_pessoais()
 
         dados_pessoais_df['funcoes_a_bordo'] = dados_pessoais_df['funcoes_a_bordo'].apply(
@@ -160,12 +160,21 @@ class Dados:
         voos = self.get_voos(filtro_periodo, filtro_aeronave, filtro_esforco_aereo)
 
         militares = []
-        Militar.inicializar()
         for _, row in dados_pessoais_df.iterrows():
-            
-            militar = Militar(voos=voos, **row.to_dict())
-
-            militares.append(militar)
+            voos_realizados = []
+            for voo in voos:
+                for tripulante in voo.tripulantes:
+                    if tripulante['tripulante'] == row['trigrama']:
+                        voos_realizados.append(voo)
+            if filtro_grupo == 'Pilotos (LSP/RSP)' and 'PIL' in row['sigla_funcao']:
+                militar = Militar(voos=voos_realizados, **row.to_dict())
+                militares.append(militar)
+            elif filtro_grupo in row['sigla_funcao']:
+                militar = Militar(voos=voos_realizados, filtro=filtro_grupo, **row.to_dict())
+                militares.append(militar)
+            else:
+                pass
+    
         return militares
 
     def get_opo_df(self):
