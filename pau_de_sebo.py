@@ -72,6 +72,5 @@ def pau_de_sebo_pilotos(detalhes_tripulantes_df,
     pau_sebo_pilotos['Total'] = pau_sebo_pilotos['Total_minutos'].map(time_handler.transform_minutes_to_duration_string)
     pau_sebo_pilotos = pau_sebo_pilotos.sort_values('Total', ascending=False)
     pau_sebo_pilotos = pau_sebo_pilotos.merge(right=meta_pilotos_df, how='left', on='tripulante')
-    st.dataframe(pau_sebo_pilotos)
 
     return pau_sebo_pilotos

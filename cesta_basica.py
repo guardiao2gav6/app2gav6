@@ -1,6 +1,5 @@
 import pandas as pd
 
-
 def pintar_celulas_pr_np(val):
     if val >= 3:
         background_color = 'rgba(0, 266, 0, 0.2)'
@@ -33,8 +32,9 @@ def gerar_cesta_basica(trimestre,
         if (i + 2) // 3 == trimestre:
             lista_meses_do_trimestre.append(i)
     detalhes_trip = detalhes_tripulantes_df.copy()
-    lista_trigramas = dados_pessoais_df.loc[dados_pessoais_df['sigla_funcao'].str.contains('PIL',
-                                                                                           case=False), 'trigrama']
+    dados_pessoais_df = dados_pessoais_df.dropna()
+    lista_trigramas = dados_pessoais_df[dados_pessoais_df['sigla_funcao'].apply(lambda x: 'PIL' in x)]['trigrama']
+
     detalhes_trip_filtrada = detalhes_trip.loc[((detalhes_trip['funcao_a_bordo'].isin(['1P', 'IN'])) |
                                                ((detalhes_trip['funcao_a_bordo'] == 'AL') &
                                                (detalhes_trip['posicao_a_bordo'] == 'LSP')) |

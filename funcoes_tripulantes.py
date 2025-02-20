@@ -7,6 +7,7 @@ def funcoes_tripulantes(dados_pessoais):
                                                  (dados_pessoais['sigla_funcao'] != 'NIL')]
     trigramas_temp = []
     funcao_a_bordo_temp = []
+    funcoes_dos_tripulantes = funcoes_dos_tripulantes.dropna()
     for i, row in funcoes_dos_tripulantes.iterrows():
         trigrama = row['trigrama']
         funcoes_separadas = row['funcoes_a_bordo'].strip().split('/')
