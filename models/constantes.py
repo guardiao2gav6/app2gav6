@@ -28,6 +28,7 @@ tempo_para_desadaptar_tripulantes = {
     'MA-R': 45,
     'IA-R': 60,
 }
+
 posicoes_a_bordo = ['LSP', 'RSP']
 
 procedimentos = {

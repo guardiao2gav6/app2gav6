@@ -37,7 +37,6 @@ esforco_aereo = dados.get_esforco_aereo()['esforco'].unique()
 filtro_periodo = st.date_input(label='Período', value=[datetime.date(2025, 1, 1), datetime.date.today()], key='periodo')
 
 voos = dados.generate_registros_voos_df(filtro_periodo)
-st.dataframe(voos)
 
 filtro_aeronave = st.multiselect(label='Aeronave', options=aeronaves)
 if not filtro_aeronave:
@@ -62,6 +61,9 @@ df_long = df_horas_militares.melt(id_vars=[id_var for id_var in df_horas_militar
                                   value_vars=funcoes,
                                   var_name='funcao_posicao_a_bordo',
                                   value_name='horas')
+
+st.divider()
+st.markdown("#### Horas de Voo")
 base = alt.Chart(df_long)
 
 grafico = base.mark_bar(size=20).encode(
@@ -100,54 +102,31 @@ text = base.mark_text(
 st.altair_chart((grafico + text), use_container_width=True)
 
 # ADAPTAÇÃO
-adaptacao_militares = list(map(lambda x: x.adaptacao(), militares))
-
-adaptacao_militares = [item for sublista in adaptacao_militares for item in sublista if item['funcao_a_bordo'] in grupo]
-
+st.divider()
+st.markdown("#### Adaptação")
+adaptacao_militares = list(map(lambda x: x.adaptacao(filtro_grupo_de_funcoes), militares))
 df_adaptacao_militares = pd.DataFrame(adaptacao_militares)
-df_adaptacao_militares['dias_para_desadaptar'] = df_adaptacao_militares['dias_para_desadaptar'].dt.days
-
-df_adaptacao_militares = df_adaptacao_militares.sort_values(by=['funcao_a_bordo', 'dias_sem_voar'], ascending=False)
+qtde_militares = len(df_adaptacao_militares['trigrama'].to_list())
+df_adaptacao_militares = df_adaptacao_militares.sort_values(by=['ordem', 'dias_sem_voar'], ascending=False)
 
 adaptacao_base = alt.Chart(df_adaptacao_militares)
 adaptacao_chart = adaptacao_base.mark_bar(
     size=20).encode(
-    x=alt.X('trigrama:N',
-            sort=alt.EncodingSortField(field='dias_para_desadaptar',
-                                        op='sum',
-                                        order='descending'),
+    y=alt.Y('trigrama:N',
+            sort=df_adaptacao_militares['trigrama'].to_list(),
             axis=alt.Axis(title='',
-                          labelAngle=0,
-                          labelFontSize=16,
-                          ticks=False,
-                          labelColor='#747575',
-                          labelAlign='center')),
-    y=alt.Y('dias_sem_voar:Q', axis=alt.Axis(labels=False, title='')),
+                            labelAngle=0,
+                            labelFontSize=16,
+                            ticks=False)),
+    x=alt.X('data_limite_para_voar:T', axis=alt.Axis(format="%d/%m", grid=True, gridColor="#c8c8c8", labelFontSize=14, labelAngle=-45, title='')),
+    x2=alt.X2('hoje:T', title='Data de Hoje'),
     color=alt.Color('funcao_a_bordo:N',
+                    scale=alt.Scale(domain=funcoes,
+                                    range=['#219ebc', '#023047', '#fb8500', '#1a8273']),
                     legend=alt.Legend(orient='top',
                                       title='',
                                       padding=20)),
-)
-
-adaptacao_chart_max_sem_voar = adaptacao_base.mark_bar(
-    opacity=0.2,
-    color='grey',
-    size=20
-).encode(
-    x=alt.X('trigrama:N',
-            sort=alt.EncodingSortField(field='dias_para_desadaptar', op='sum', order='descending')),
-    y=alt.Y('dias_para_desadaptar:Q'))
-
-rotulo_dias_restantes = adaptacao_base.mark_text(
-    color='#747575',
-    baseline='top',
-    fontSize=16,
-    dy=-20
-).encode(
-    x=alt.X('trigrama:N', sort=alt.EncodingSortField(field='dias_para_desadaptar', op='sum', order='descending')),
-    y=alt.Y('dias_sem_voar:Q'),
-    text='label:N',
-)
-
-grafico_adaptacao = (adaptacao_chart_max_sem_voar + adaptacao_chart + rotulo_dias_restantes)
-st.altair_chart(grafico_adaptacao, use_container_width=True)
+).properties(
+  height=45 * qtde_militares
+).configure_axis(grid=True)
+st.altair_chart(adaptacao_chart)

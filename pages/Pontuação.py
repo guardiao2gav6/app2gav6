@@ -67,7 +67,6 @@ def calcular_pontos_horas(row):
 
     row['Pontos Horas'] = pontuacao_piloto_horas
     return row
-    # st.write(row['Pontos Horas'])
 
 
 def calcular_pontos_adaptacao(row):

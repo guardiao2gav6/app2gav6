@@ -43,7 +43,6 @@ def gerar_grafico_pau_de_sebo(detalhes_tripulantes_df,
     pau_de_sebo_df = pau_de_sebo.pau_de_sebo_pilotos(detalhes_tripulantes_df=detalhes_tripulantes_df,
                                                      meta_pilotos_df=meta_pilotos_df,
                                                      dados_pessoais_df=dados_pessoais_df)
-    st.write(pau_de_sebo_df)
     base = alt.Chart(pau_de_sebo_df).transform_fold(
         ['LSP', 'RSP'],
         as_=['Categoria', 'value']

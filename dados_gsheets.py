@@ -5,7 +5,7 @@ import time_handler
 import streamlit as st
 from models.militar import Militar
 from models.voo import Voo
-
+import models.constantes as constantes
 
 class Dados:
     url = r"https://docs.google.com/spreadsheets/d/1pHRfuc0vHjFLWdZ4DlX7OencLG6vIyCbtj53Jk88UR8/edit?usp=sharing"
@@ -116,8 +116,6 @@ class Dados:
                                                                                                        'BOS',
                                                                                                        'LET'])]
         
-        st.write(detalhes_tripulantes_df)
-
         return detalhes_tripulantes_df
 
     def generate_meta_pilotos_df(self):
@@ -138,26 +136,29 @@ class Dados:
         id_dados_pessoais = "1235248626"
         dados_pessoais_df = self.connect_to_worksheet(
             id_worksheet=id_dados_pessoais)
-
-        dados_pessoais_df = dados_pessoais_df[~dados_pessoais_df['trigrama'].isin(['FIC',
-                                                                                   'HEL',
-                                                                                   'TAI',
-                                                                                   'TSU',
-                                                                                   'RND',
-                                                                                   'DGO',
-                                                                                   'BOS',
-                                                                                   'LET'])]
-        return dados_pessoais_df
-
-    def get_militares(self, filtro_periodo, filtro_aeronave, filtro_esforco_aereo, filtro_grupo):
-        dados_pessoais_df = self.get_dados_pessoais()
-
-        dados_pessoais_df['funcoes_a_bordo'] = dados_pessoais_df['funcoes_a_bordo'].apply(
-            lambda x: x.split(" / "))
-        dados_pessoais_df['sigla_funcao'] = dados_pessoais_df['sigla_funcao'].apply(
-            lambda x: x.split("/"))
+        dados_pessoais_df = dados_pessoais_df.dropna()
+                
+        dados_pessoais_df[['funcoes_a_bordo',
+                           'sigla_funcao',
+                           'funcoes_que_pode_exercer']] = dados_pessoais_df[['funcoes_a_bordo',
+                           'sigla_funcao',
+                           'funcoes_que_pode_exercer']].apply(lambda x: x.str.replace(" ", "", regex=True).str.split('/'))
         
+        dados_pessoais_df['grupo_funcoes'] = {}
+        
+        for i, row in dados_pessoais_df.iterrows():
+            funcoes_que_pode_exercer = row['funcoes_que_pode_exercer']
+            siglas_funcao = row['sigla_funcao']
+            dicionario = {sigla: [valor for valor in funcoes_que_pode_exercer if valor in constantes.funcoes_agrupadas_sem_valores[sigla]] for sigla in siglas_funcao}
+            
+            dados_pessoais_df.at[i, 'grupo_funcoes'] = dicionario
+        
+        return dados_pessoais_df
+        
+    def get_militares(self, filtro_periodo, filtro_aeronave, filtro_esforco_aereo, filtro_grupo):
+
         voos = self.get_voos(filtro_periodo, filtro_aeronave, filtro_esforco_aereo)
+        dados_pessoais_df = self.get_dados_pessoais()
 
         militares = []
         for _, row in dados_pessoais_df.iterrows():

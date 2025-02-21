@@ -16,7 +16,6 @@ class Militar:
 
         self.voos_realizados = voos
         self.filtro = filtro
-        self.dados_adaptacao = self.adaptacao()
     
     def horas_militar(self):
         horas_de_voo = {
@@ -50,7 +49,6 @@ class Militar:
         return deepcopy(horas_descompactado)
 
     
-    @property
     def cesta_basica(self):
         cesta_basica = {
             'trigrama': self.trigrama,
@@ -77,48 +75,51 @@ class Militar:
         return cesta_basica
     
     
-    def adaptacao(self):
+    def adaptacao(self, filtro_grupo):
         funcoes_adaptacao = self.funcoes_a_bordo
+        grupo_funcoes = self.grupo_funcoes
+        funcoes = grupo_funcoes[filtro_grupo]
+        maior_funcao = list(set(funcoes) & set(funcoes_adaptacao))[0]
+        hoje = datetime.datetime.now()
+        ultimo_voo = self.checar_ultimo_voo(funcoes, maior_funcao)
+        max_dias_sem_voar = constantes.tempo_para_desadaptar_tripulantes[maior_funcao]
+        voar_ate = ultimo_voo + datetime.timedelta(days=max_dias_sem_voar)
+        dias_para_desadaptar = voar_ate - hoje
+        dias_sem_voar = hoje - ultimo_voo
+        label = "Adaptado" if voar_ate >= hoje else "Desadaptado"
+        
+        if maior_funcao[0] == 'I':
+            ordem = 1
+        elif maior_funcao[0] == 'A':
+            ordem = 3
+        else:
+            ordem = 2
+        
+        adaptacao_funcao = {
+            'trigrama': self.trigrama,
+            'funcao_a_bordo': maior_funcao,
+            'ultimo_voo': ultimo_voo,
+            'max_dias_sem_voar': max_dias_sem_voar,
+            'data_limite_para_voar': voar_ate,
+            'dias_para_desadaptar':dias_para_desadaptar.days,
+            'dias_sem_voar': dias_sem_voar.days,
+            'hoje': hoje,
+            'label': label,
+            'ordem': ordem
+        }
 
-        adaptacao = []
-        for funcao_a_bordo in funcoes_adaptacao:
-            ultimo_voo = self.checar_ultimo_voo(funcao_a_bordo)
-            max_dias_sem_voar = constantes.tempo_para_desadaptar_tripulantes[funcao_a_bordo]
-            voar_ate = ultimo_voo + datetime.timedelta(days=max_dias_sem_voar)
-            dias_para_desadaptar = voar_ate - datetime.datetime.now()
-            dias_sem_voar = datetime.datetime.now() - ultimo_voo
-            label = "Adaptado" if voar_ate >= datetime.datetime.now() else "Desadaptado"
-            
-            adaptacao_funcao = {
-                'trigrama': self.trigrama,
-                'funcao_a_bordo': funcao_a_bordo,
-                'ultimo_voo': ultimo_voo,
-                'max_dias_sem_voar': max_dias_sem_voar,
-                'voar_ate': voar_ate,
-                'dias_para_desadaptar':dias_para_desadaptar,
-                'dias_sem_voar': dias_sem_voar,
-                'label': label
-            }
-            adaptacao.append(adaptacao_funcao)
+        return adaptacao_funcao
 
-        return adaptacao
-
-    def checar_ultimo_voo(self, funcao):
-
-        for chave, valor in constantes.funcoes_agrupadas_sem_valores.items():
-            if funcao in valor:
-                grupo_funcoes  = chave
-
+    def checar_ultimo_voo(self, funcoes, maior_funcao):
+        
         voos_realizados = self.voos_realizados
 
         voos_filtrados_para_funcao = [
-            voo for voo in voos_realizados if any(tripulante['tripulante'] == self.trigrama and tripulante['funcao_a_bordo'] in constantes.funcoes_agrupadas_sem_valores[grupo_funcoes] for tripulante in voo.tripulantes)
+            voo for voo in voos_realizados if any(tripulante['tripulante'] == self.trigrama and tripulante['funcao_a_bordo'] in funcoes for tripulante in voo.tripulantes)
             ]
-        if self.trigrama == 'MRC':
-            for voo in voos_filtrados_para_funcao:
-                st.write(voo.IdVoo)
-        max_dias_sem_voar = constantes.tempo_para_desadaptar_tripulantes[funcao]
-        default = datetime.datetime.now() - datetime.timedelta(days=max_dias_sem_voar + 1)
+        max_dias_sem_voar = constantes.tempo_para_desadaptar_tripulantes[maior_funcao]
+        default = datetime.datetime.now() - datetime.timedelta(days=max_dias_sem_voar - 1)
+        
         ultimo_voo = max((voo.data_hora_pouso for voo in voos_filtrados_para_funcao), default=default)
         
         return ultimo_voo
