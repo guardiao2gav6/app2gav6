@@ -139,14 +139,14 @@ SOBREAVISO_R99_chart_data = generate_chart_data(SOBREAVISO_R99_CUMPRIDO, militar
 SOBREAVISO_R99_chart = generate_chart(SOBREAVISO_R99_chart_data)
 
 # Concatenando as tabelas de serviços para obter o total
-TOTAL_data = pd.concat([OPO_chart_data, SOBREAVISO_chart_data, SOBREAVISO_R99_chart_data])
+TOTAL_data = pd.concat([OPO_chart_data, SOBREAVISO_chart_data])
 TOTAL_data = TOTAL_data.drop(columns='Totais')
 TOTAL_data = TOTAL_data.groupby(by=['militar', 'cor_portugues'])[['Qtde serviços']].sum().reset_index()
 TOTAL_data['Totais'] = TOTAL_data['militar'].map(lambda x: gerar_totais(x, TOTAL_data))
 total_chart = generate_chart(TOTAL_data)
 
 # VISUALIZAÇÃO
-st.markdown('### Total de Serviços - OPO + CAV + R-99')
+st.markdown('### Total de Serviços - OPO + CAV')
 st.altair_chart(total_chart, use_container_width=True)
 st.markdown('---')
 
